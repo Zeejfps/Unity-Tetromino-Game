@@ -38,6 +38,7 @@ public class GameController : MonoBehaviour
             if (!m_Tetromino.TryMoveDown())
             {
                 FindAndClearCompletedRows();
+                m_Tetromino.Decompose();
                 m_Tetromino = Instantiate(m_TetrominoPrefab);
             }
         }

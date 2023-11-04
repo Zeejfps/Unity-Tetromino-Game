@@ -154,4 +154,13 @@ public sealed class Tetromino : MonoBehaviour
             //Debug.Log($"Offset[{i}]: {m_Offsets[i]}");
         }
     }
+
+    public void Decompose()
+    {
+        var myParent = transform.parent;
+        foreach (var cell in m_Cells)
+            cell.transform.SetParent(myParent);
+        
+        Destroy(gameObject);
+    }
 }
