@@ -7,12 +7,14 @@ public sealed class GameController : MonoBehaviour
     [SerializeField] private GridFactory m_GridFactory;
     [SerializeField] private TetrominoSpawnerFactory m_TetrominoSpawnerFactory;
     [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
+    [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     
     private IGrid m_Grid;
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
     private ITetrominoSpawner m_TetrominoSpawner;
     private ITouchGestureDetector m_TouchGestureDetector;
+    private IGameStateMachine m_GameStateMachine;
     
     private void Start()
     {
@@ -22,6 +24,21 @@ public sealed class GameController : MonoBehaviour
         m_CompletedRowsCache = new();
         m_Grid = m_GridFactory.Create();
         m_TetrominoSpawner = m_TetrominoSpawnerFactory.Create();
+        m_GameStateMachine = m_GameStateMachineProvider.Get();
+        
+        m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
+    }
+
+    private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
+    {
+        if (currstate == GameState.Playing)
+        {
+            StartGame();
+        }
+    }
+
+    private void StartGame()
+    {
         m_Tetromino = m_TetrominoSpawner.Spawn();
         StartCoroutine(MoveDownRoutine());
     }
