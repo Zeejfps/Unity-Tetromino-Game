@@ -26,13 +26,13 @@ public sealed class GameController : MonoBehaviour
         if (m_Tetromino == null)
             return;
         
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
             m_Tetromino.TryMoveLeft();
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
             m_Tetromino.TryMoveRight();
-        else if (Input.GetKeyDown(KeyCode.R))
+        else if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             m_Tetromino.TryRotate();
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             m_Tetromino.TryMoveDown();
         else if (Input.GetKeyDown(KeyCode.Space))
         {
