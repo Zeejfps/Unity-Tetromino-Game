@@ -90,6 +90,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8297278952501935375}
     m_Modifications:
+    - target: {fileID: 5669720615278003655, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: aac7852742724204eac3969b3c76c346, type: 2}
     - target: {fileID: 7133281172681900544, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
       propertyPath: m_Name
       value: Cell (3)
@@ -152,6 +156,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8297278952501935375}
     m_Modifications:
+    - target: {fileID: 5669720615278003655, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: aac7852742724204eac3969b3c76c346, type: 2}
     - target: {fileID: 7133281172681900544, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
       propertyPath: m_Name
       value: Cell
@@ -214,6 +222,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8297278952501935375}
     m_Modifications:
+    - target: {fileID: 5669720615278003655, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: aac7852742724204eac3969b3c76c346, type: 2}
     - target: {fileID: 7133281172681900544, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
       propertyPath: m_Name
       value: Cell (1)
@@ -276,6 +288,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8297278952501935375}
     m_Modifications:
+    - target: {fileID: 5669720615278003655, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: aac7852742724204eac3969b3c76c346, type: 2}
     - target: {fileID: 7133281172681900544, guid: 12b77afaa41391c408ca81c2e1295bee, type: 3}
       propertyPath: m_Name
       value: Cell (2)
