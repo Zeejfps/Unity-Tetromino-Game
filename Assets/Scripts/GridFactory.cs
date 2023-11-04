@@ -10,7 +10,7 @@ public sealed class GridFactory : ScriptableObject
     {
         if (m_Grid == null)
         {
-            m_Grid = new Grid(10, 22);
+            m_Grid = new Grid(10, 20);
         }
 
         return m_Grid;
