@@ -6,14 +6,19 @@ public sealed class GameController : MonoBehaviour
 {
     [SerializeField] private GridFactory m_GridFactory;
     [SerializeField] private TetrominoSpawnerFactory m_TetrominoSpawnerFactory;
-
+    [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
+    
     private IGrid m_Grid;
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
     private ITetrominoSpawner m_TetrominoSpawner;
+    private ITouchGestureDetector m_TouchGestureDetector;
     
     private void Start()
     {
+        Application.targetFrameRate = 60;
+        
+        m_TouchGestureDetector = m_TouchGestureDetectorProvider.Get();
         m_CompletedRowsCache = new();
         m_Grid = m_GridFactory.Create();
         m_TetrominoSpawner = m_TetrominoSpawnerFactory.Create();
@@ -26,15 +31,15 @@ public sealed class GameController : MonoBehaviour
         if (m_Tetromino == null)
             return;
         
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || m_TouchGestureDetector.SwipeLeftDetected())
             m_Tetromino.TryMoveLeft();
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || m_TouchGestureDetector.SwipeRightDetected())
             m_Tetromino.TryMoveRight();
-        else if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        else if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || m_TouchGestureDetector.TouchDetected())
             m_Tetromino.TryRotate();
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             m_Tetromino.TryMoveDown();
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetKeyDown(KeyCode.Space) || m_TouchGestureDetector.SwipeDownDetected())
         {
             var canMoveDown = true;
             do
