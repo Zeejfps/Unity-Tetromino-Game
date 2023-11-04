@@ -2,7 +2,9 @@
 
 public interface IGrid
 {
+    int Width { get; }
+    
     void Fill(Vector2Int pos, ICell cell);
     void Clear(Vector2Int pos, ICell cell);
-    int Width { get; }
+    bool IsOccupied(Vector2Int pos);
 }

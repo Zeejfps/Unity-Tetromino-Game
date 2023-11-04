@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.CompilerServices;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Factories/Grid Factory")]
 public sealed class GridFactory : ScriptableObject
@@ -9,7 +10,7 @@ public sealed class GridFactory : ScriptableObject
     {
         if (m_Grid == null)
         {
-            m_Grid = new Grid(10, 20);
+            m_Grid = new Grid(10, 22);
         }
 
         return m_Grid;
@@ -30,14 +31,26 @@ sealed class Grid : IGrid
     
     public void Fill(Vector2Int pos, ICell cell)
     {
-        var index = pos.x + pos.y * Width;
+        var index = ComputeIndex(pos);
         m_Cells[index] = cell;
     }
 
     public void Clear(Vector2Int pos, ICell cell)
     {
-        var index = pos.x + pos.y * Width;
+        var index = ComputeIndex(pos);
         if (m_Cells[index] == cell)
             m_Cells[index] = null;
+    }
+
+    public bool IsOccupied(Vector2Int pos)
+    {
+        var index = ComputeIndex(pos);
+        return m_Cells[index] != null;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int ComputeIndex(Vector2Int pos)
+    {
+        return pos.x + pos.y * Width;
     }
 }

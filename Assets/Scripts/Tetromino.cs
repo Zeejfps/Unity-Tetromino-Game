@@ -3,13 +3,15 @@ using UnityEngine;
 public sealed class Tetromino : MonoBehaviour
 {
     [SerializeField] private GridFactory m_GridFactory;
-    [SerializeField] private Cell[] m_Cells;
 
     private Vector3[] m_Offsets;
     private IGrid m_Grid;
+    private Cell[] m_Cells;
     
     private void Start()
     {
+        m_Cells = GetComponentsInChildren<Cell>();
+        
         var cellCount = m_Cells.Length;
         m_Offsets = new Vector3[cellCount];
         CalculateOffsets();
@@ -20,90 +22,32 @@ public sealed class Tetromino : MonoBehaviour
 
     public bool TryMoveLeft()
     {
-        if (CanMoveLeft())
+        ClearGridAtMyPosition();
+        transform.position += Vector3.left;
+        if (IsInValidPosition())
         {
-            MoveLeft();
+            FillGridAtMyPosition();
             return true;
         }
 
+        transform.position += Vector3.right;
+        FillGridAtMyPosition();
         return false;
     }
 
     public bool TryMoveRight()
     {
-        if (CanMoveRight())
+        ClearGridAtMyPosition();
+        transform.position += Vector3.right;
+        if (IsInValidPosition())
         {
-            MoveRight();
+            FillGridAtMyPosition();
             return true;
         }
 
-        return false;
-    }
-
-    private bool CanMoveRight()
-    {
-        var cellCount = m_Cells.Length;
-        var myPosition = transform.position;
-        for (var i = 0; i < cellCount; i++)
-        {
-            var offset = m_Offsets[i];
-            var gridPos = WorldToGridPosition(myPosition + offset);
-            if (gridPos.x >= m_Grid.Width)
-                return false;
-        }
-
-        return true;
-    }
-
-    private bool CanMoveLeft()
-    {
-        var cellCount = m_Cells.Length;
-        var myPosition = transform.position;
-        for (var i = 0; i < cellCount; i++)
-        {
-            var offset = m_Offsets[i];
-            var gridPos = WorldToGridPosition(myPosition + offset);
-            if (gridPos.x <= 0)
-                return false;
-        }
-
-        return true;
-    }
-
-    private bool CanMoveDown()
-    {
-        var cellCount = m_Cells.Length;
-        var myPosition = transform.position;
-        for (var i = 0; i < cellCount; i++)
-        {
-            var offset = m_Offsets[i];
-            var gridPos = WorldToGridPosition(myPosition + offset);
-            if (gridPos.y <= 0)
-                return false;
-        }
-
-        return true;
-    }
-
-    private void MoveRight()
-    {
-        ClearGridAtMyPosition();
-        transform.position += Vector3.right;
-        FillGridAtMyPosition();
-    }
-
-    private void MoveLeft()
-    {
-        ClearGridAtMyPosition();
         transform.position += Vector3.left;
         FillGridAtMyPosition();
-    }
-
-    private void MoveDown()
-    {
-        ClearGridAtMyPosition();
-        transform.position += Vector3.down;
-        FillGridAtMyPosition();
+        return false;
     }
 
     private void ClearGridAtMyPosition()
@@ -136,19 +80,23 @@ public sealed class Tetromino : MonoBehaviour
     {
         return new Vector2Int
         {
-            x = (int)(worldPosition.x + m_Grid.Width * 0.5),
-            y = (int)(worldPosition.y)
+            x = (int)(Mathf.Floor(worldPosition.x) + m_Grid.Width * 0.5),
+            y = (int)(Mathf.Floor(worldPosition.y))
         };
     }
 
     public bool TryMoveDown()
     {
-        if (CanMoveDown())
+        ClearGridAtMyPosition();
+        transform.position += Vector3.down;
+        if (IsInValidPosition())
         {
-            MoveDown();
+            FillGridAtMyPosition();
             return true;
         }
-
+        
+        transform.position += Vector3.up;
+        FillGridAtMyPosition();
         return false;
     }
 
@@ -185,6 +133,8 @@ public sealed class Tetromino : MonoBehaviour
                 return false;
             if (gridPos.x < 0)
                 return false;
+            if (m_Grid.IsOccupied(gridPos))
+                return false;
         }
 
         return true;
@@ -198,8 +148,8 @@ public sealed class Tetromino : MonoBehaviour
         {
             var cell = m_Cells[i];
             var cellPosition = cell.transform.position;
-            var xOffset = Mathf.Round(myPosition.x - cellPosition.x);
-            var yOffset = Mathf.Round(myPosition.y - cellPosition.y);
+            var xOffset = cellPosition.x - myPosition.x;
+            var yOffset = cellPosition.y - myPosition.y;
             m_Offsets[i] = new Vector3(xOffset, yOffset, 0f);
             //Debug.Log($"Offset[{i}]: {m_Offsets[i]}");
         }
