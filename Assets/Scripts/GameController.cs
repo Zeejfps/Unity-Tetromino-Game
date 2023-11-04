@@ -51,7 +51,7 @@ public sealed class GameController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             if (!m_Tetromino.TryMoveDown())
             {
-                m_Tetromino.Decompose();
+                m_Tetromino.DecomposeAndDestroy();
                 m_Tetromino = null;
                 yield return FindAndClearCompletedRowsRoutine();
                 m_Tetromino = m_TetrominoSpawner.Spawn();

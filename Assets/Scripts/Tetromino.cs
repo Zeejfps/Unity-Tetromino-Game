@@ -89,14 +89,18 @@ public sealed class Tetromino : MonoBehaviour
     public bool TryMoveDown()
     {
         ClearGridAtMyPosition();
-        transform.position += Vector3.down;
+        
+        var myTransform = transform;
+        var prevPosition = myTransform.position;
+        myTransform.position += Vector3.down;
+        
         if (IsInValidPosition())
         {
             FillGridAtMyPosition();
             return true;
         }
         
-        transform.position += Vector3.up;
+        myTransform.position = prevPosition;
         FillGridAtMyPosition();
         return false;
     }
@@ -156,7 +160,7 @@ public sealed class Tetromino : MonoBehaviour
         }
     }
 
-    public void Decompose()
+    public void DecomposeAndDestroy()
     {
         var myParent = transform.parent;
         foreach (var cell in m_Cells)
