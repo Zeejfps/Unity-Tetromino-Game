@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Providers/Touch Gesture Detector Provider")]
 public sealed class TouchGestureDetectorProvider : ScriptableObject

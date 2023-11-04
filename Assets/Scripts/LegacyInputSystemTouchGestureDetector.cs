@@ -80,7 +80,7 @@ sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestur
                 if (m_SwipeDetected)
                     return;
                 
-                if (deltaMagnitude < 80f)
+                if (deltaMagnitude < 100f)
                 {
                     m_TapDetected = true;
                 }
