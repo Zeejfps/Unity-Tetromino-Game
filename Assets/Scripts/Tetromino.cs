@@ -104,7 +104,7 @@ public sealed class Tetromino : MonoBehaviour
     public bool TryRotate()
     {
         ClearGridAtMyPosition();
-        m_Pivot.Rotate(Vector3.forward, 90f);
+        m_Pivot.Rotate(Vector3.forward, -90f);
         CalculateOffsets();
 
         if (IsInValidPosition())
@@ -114,7 +114,7 @@ public sealed class Tetromino : MonoBehaviour
         }
         
         // Undo rotation
-        m_Pivot.Rotate(Vector3.forward, -90f);
+        m_Pivot.Rotate(Vector3.forward, 90f);
         CalculateOffsets();
         FillGridAtMyPosition();
         return false;
