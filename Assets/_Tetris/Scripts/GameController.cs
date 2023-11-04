@@ -178,11 +178,11 @@ public sealed class GameController : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        for (var i = 0; i < m_CompletedRowsCache.Count; i++)
+        for (var i = m_CompletedRowsCache.Count - 1; i >= 0; i--)
         {
             for (var x = 0; x < m_Grid.Width; x++)
             {
-                var yStart = m_CompletedRowsCache[0];
+                var yStart = m_CompletedRowsCache[i];
                 for (var y = yStart + 1; y < m_Grid.Height; y++)
                 {
                     var cell = m_Grid.GetAndClear(x, y);
