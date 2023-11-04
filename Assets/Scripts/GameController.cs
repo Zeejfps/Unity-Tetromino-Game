@@ -32,8 +32,16 @@ public sealed class GameController : MonoBehaviour
             m_Tetromino.TryMoveRight();
         else if (Input.GetKeyDown(KeyCode.R))
             m_Tetromino.TryRotate();
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S))
             m_Tetromino.TryMoveDown();
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var canMoveDown = true;
+            do
+            {
+                canMoveDown = m_Tetromino.TryMoveDown();
+            } while (canMoveDown);
+        }
     }
     
     private IEnumerator MoveDownRoutine()
