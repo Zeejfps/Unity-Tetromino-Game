@@ -15,6 +15,7 @@ public sealed class GameController : MonoBehaviour
     private ITetrominoSpawner m_TetrominoSpawner;
     private ITouchGestureDetector m_TouchGestureDetector;
     private IGameStateMachine m_GameStateMachine;
+    private Coroutine m_MoveDownRoutine;
     
     private void Start()
     {
@@ -31,16 +32,50 @@ public sealed class GameController : MonoBehaviour
 
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
     {
-        if (currstate == GameState.Playing)
+        if (prevstate == GameState.GameOver && currstate == GameState.Playing)
+        {
+            RestartGame();
+        }
+        else if (currstate == GameState.Playing)
         {
             StartGame();
+        }
+        else if (currstate == GameState.GameOver)
+        {
+            if (m_MoveDownRoutine != null)
+            {
+                StopCoroutine(m_MoveDownRoutine);
+                m_MoveDownRoutine = null;
+            }
         }
     }
 
     private void StartGame()
     {
         m_Tetromino = m_TetrominoSpawner.Spawn();
-        StartCoroutine(MoveDownRoutine());
+        m_MoveDownRoutine = StartCoroutine(MoveDownRoutine());
+    }
+
+    private void RestartGame()
+    {
+        StartCoroutine(RestartGameRoutine());
+    }
+
+    private IEnumerator RestartGameRoutine()
+    {
+        for (var x = 0; x < m_Grid.Width; x++)
+        {
+            for (var y = 0; y < m_Grid.Height; y++)
+            {
+                var cell = m_Grid.GetAndClear(x, y);
+                if (cell != null)
+                {
+                    cell.Destroy();
+                }
+            }
+        }
+        yield return new WaitForSeconds(0.25f);
+        StartGame();
     }
 
     private void Update()
@@ -71,12 +106,18 @@ public sealed class GameController : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.5f);
-            if (!m_Tetromino.TryMoveDown())
+            if (m_Tetromino != null && !m_Tetromino.TryMoveDown())
             {
                 m_Tetromino.DecomposeAndDestroy();
                 m_Tetromino = null;
                 yield return FindAndClearCompletedRowsRoutine();
                 m_Tetromino = m_TetrominoSpawner.Spawn();
+                if (!m_Tetromino.IsInValidPosition())
+                {
+                    m_Tetromino.Destroy();
+                    m_Tetromino = null;
+                    m_GameStateMachine.TransitionTo(GameState.GameOver);
+                }
             }
         }
     }

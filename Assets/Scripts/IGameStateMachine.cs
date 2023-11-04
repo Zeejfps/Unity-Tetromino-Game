@@ -2,6 +2,7 @@
 
 public interface IGameStateMachine
 {
-    event GameStateChangedCallback StateChanged; 
+    event GameStateChangedCallback StateChanged;
+    GameState State { get; }
     void TransitionTo(GameState state);
 }

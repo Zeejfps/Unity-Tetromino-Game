@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public sealed class Tetromino : MonoBehaviour
@@ -8,16 +9,19 @@ public sealed class Tetromino : MonoBehaviour
     private Vector3[] m_Offsets;
     private IGrid m_Grid;
     private Cell[] m_Cells;
-    
-    private void Start()
+
+    private void Awake()
     {
         m_Cells = GetComponentsInChildren<Cell>();
-        
+        m_Grid = m_GridFactory.Create();
+
         var cellCount = m_Cells.Length;
         m_Offsets = new Vector3[cellCount];
         CalculateOffsets();
+    }
 
-        m_Grid = m_GridFactory.Create();
+    private void Start()
+    {
         FillGridAtMyPosition();
     }
 
@@ -124,7 +128,7 @@ public sealed class Tetromino : MonoBehaviour
         return false;
     }
 
-    private bool IsInValidPosition()
+    public bool IsInValidPosition()
     {
         var cellCount = m_Cells.Length;
         var myPosition = transform.position;
@@ -167,5 +171,12 @@ public sealed class Tetromino : MonoBehaviour
             cell.transform.SetParent(myParent);
         
         Destroy(gameObject);
+    }
+
+    public void Destroy()
+    {
+        var go = gameObject;
+        go.SetActive(false);
+        Destroy(go);
     }
 }

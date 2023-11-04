@@ -21,7 +21,6 @@ sealed class TetrisGameStateMachine : IGameStateMachine
     public event GameStateChangedCallback StateChanged;
 
     private GameState m_State;
-
     public GameState State
     {
         get => m_State;
