@@ -2,18 +2,18 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Factories/Tetromino Spawner Factory")]
-public sealed class TetrominoSpawnerFactory : ScriptableObject
+public sealed class TetrominoSpawnerProvider : ScriptableObject
 {
-    [SerializeField] private GridFactory m_GridFactory;
+    [SerializeField] private GridProvider m_GridFactory;
     [SerializeField] private Tetromino[] m_TetrominoPrefabs;
     
     private ITetrominoSpawner m_TetrominoSpawner;
     
-    public ITetrominoSpawner Create()
+    public ITetrominoSpawner Get()
     {
         if (m_TetrominoSpawner == null)
         {
-            var grid = m_GridFactory.Create();
+            var grid = m_GridFactory.Get();
             m_TetrominoSpawner = new TetrominoSpawner(grid, m_TetrominoPrefabs);
         }
         

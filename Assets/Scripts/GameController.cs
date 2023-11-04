@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public sealed class GameController : MonoBehaviour
 {
-    [SerializeField] private GridFactory m_GridFactory;
-    [SerializeField] private TetrominoSpawnerFactory m_TetrominoSpawnerFactory;
+    [FormerlySerializedAs("m_GridFactory")] 
+    [SerializeField] private GridProvider m_GridProvider;
+    [FormerlySerializedAs("m_TetrominoSpawnerFactory")] 
+    [SerializeField] private TetrominoSpawnerProvider m_TetrominoSpawnerProvider;
     [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     
@@ -16,18 +19,27 @@ public sealed class GameController : MonoBehaviour
     private ITouchGestureDetector m_TouchGestureDetector;
     private IGameStateMachine m_GameStateMachine;
     private Coroutine m_MoveDownRoutine;
-    
-    private void Start()
+
+    private void Awake()
     {
         Application.targetFrameRate = 60;
-        
-        m_TouchGestureDetector = m_TouchGestureDetectorProvider.Get();
+
         m_CompletedRowsCache = new();
-        m_Grid = m_GridFactory.Create();
-        m_TetrominoSpawner = m_TetrominoSpawnerFactory.Create();
-        m_GameStateMachine = m_GameStateMachineProvider.Get();
         
+        m_Grid = m_GridProvider.Get();
+        m_TetrominoSpawner = m_TetrominoSpawnerProvider.Get();
+        m_GameStateMachine = m_GameStateMachineProvider.Get();
+        m_TouchGestureDetector = m_TouchGestureDetectorProvider.Get();
+    }
+
+    private void Start()
+    {
         m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
+    }
+
+    private void OnDestroy()
+    {
+        m_GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
     }
 
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)

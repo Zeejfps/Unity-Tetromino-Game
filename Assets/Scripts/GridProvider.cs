@@ -2,11 +2,11 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Factories/Grid Factory")]
-public sealed class GridFactory : ScriptableObject
+public sealed class GridProvider : ScriptableObject
 {
     private IGrid m_Grid;
     
-    public IGrid Create()
+    public IGrid Get()
     {
         if (m_Grid == null)
         {

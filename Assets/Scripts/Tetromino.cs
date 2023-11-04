@@ -3,7 +3,7 @@ using UnityEngine;
 
 public sealed class Tetromino : MonoBehaviour
 {
-    [SerializeField] private GridFactory m_GridFactory;
+    [SerializeField] private GridProvider m_GridFactory;
     [SerializeField] private Transform m_Pivot;
     
     private Vector3[] m_Offsets;
@@ -13,7 +13,7 @@ public sealed class Tetromino : MonoBehaviour
     private void Awake()
     {
         m_Cells = GetComponentsInChildren<Cell>();
-        m_Grid = m_GridFactory.Create();
+        m_Grid = m_GridFactory.Get();
 
         var cellCount = m_Cells.Length;
         m_Offsets = new Vector3[cellCount];
