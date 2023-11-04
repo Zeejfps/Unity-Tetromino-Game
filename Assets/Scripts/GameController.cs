@@ -1,9 +1,9 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private Tetromino m_TetrominoPrefab;
     [SerializeField] private Tetromino m_Tetromino;
 
     private void Start()
@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour
             m_Tetromino.TryMoveRight();
         else if (Input.GetKeyDown(KeyCode.R))
             m_Tetromino.TryRotate();
+        else if (Input.GetKeyDown(KeyCode.S))
+            m_Tetromino.TryMoveDown();
     }
     
     private IEnumerator MoveDownRoutine()
@@ -26,7 +28,10 @@ public class GameController : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.5f);
-            m_Tetromino.TryMoveDown();
+            if (!m_Tetromino.TryMoveDown())
+            {
+                m_Tetromino = Instantiate(m_TetrominoPrefab);
+            }
         }
     }
 }
