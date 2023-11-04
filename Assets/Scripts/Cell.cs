@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public sealed class Cell : MonoBehaviour, ICell
+public sealed class Cell : MonoBehaviour, ICell, IAnimate
 {
     public void MoveDown()
     {
@@ -9,8 +9,17 @@ public sealed class Cell : MonoBehaviour, ICell
 
     public void Destroy()
     {
-        var go = gameObject;
-        go.SetActive(false);
-        Destroy(go);
+        var startScale = transform.localScale;
+        this.Animate(0.25f, t => t, t =>
+        {
+            transform.localScale = Vector3.LerpUnclamped(startScale, Vector3.zero, t);
+        }, () =>
+        {
+            var go = gameObject;
+            go.SetActive(false);
+            Destroy(go);
+        });
     }
+
+    public Coroutine AnimationRoutine { get; set; }
 }

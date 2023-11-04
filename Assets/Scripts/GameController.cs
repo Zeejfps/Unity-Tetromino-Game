@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -20,6 +21,9 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
+        if (m_Tetromino == null)
+            return;
+        
         if (Input.GetKeyDown(KeyCode.A))
             m_Tetromino.TryMoveLeft();
         else if (Input.GetKeyDown(KeyCode.D))
@@ -37,26 +41,30 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             if (!m_Tetromino.TryMoveDown())
             {
-                FindAndClearCompletedRows();
                 m_Tetromino.Decompose();
+                m_Tetromino = null;
+                yield return FindAndClearCompletedRowsRoutine();
                 m_Tetromino = Instantiate(m_TetrominoPrefab);
             }
         }
     }
 
-    private void FindAndClearCompletedRows()
+    private IEnumerator FindAndClearCompletedRowsRoutine()
     {
         FindCompletedRows();
         
         //Debug.Log($"Completed Rows: {m_CompletedRowsCache.Count}");
-        foreach (var y in m_CompletedRowsCache)
+        
+        for (var x = 0; x < m_Grid.Width; x++)
         {
-            for (var x = 0; x < m_Grid.Width; x++)
+            foreach (var y in m_CompletedRowsCache)
             {
                 var cell = m_Grid.GetAndClear(x, y);
                 cell.Destroy();
+                //Debug.Log($"Cleared Row: {y}");
             }
-            //Debug.Log($"Cleared Row: {y}");
+
+            yield return new WaitForSeconds(0.05f);
         }
 
         for (var i = 0; i < m_CompletedRowsCache.Count; i++)
