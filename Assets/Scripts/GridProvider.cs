@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Factories/Grid Factory")]
+[CreateAssetMenu(menuName = "Providers/Grid Factory")]
 public sealed class GridProvider : ScriptableObject
 {
     private IGrid m_Grid;

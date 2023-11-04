@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Factories/Tetromino Spawner Factory")]
+[CreateAssetMenu(menuName = "Providers/Tetromino Spawner Factory")]
 public sealed class TetrominoSpawnerProvider : ScriptableObject
 {
     [SerializeField] private GridProvider m_GridFactory;
