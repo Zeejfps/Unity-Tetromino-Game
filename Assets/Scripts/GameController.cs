@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour
             m_Tetromino.TryMoveLeft();
         else if (Input.GetKeyDown(KeyCode.D))
             m_Tetromino.TryMoveRight();
+        else if (Input.GetKeyDown(KeyCode.R))
+            m_Tetromino.TryRotate();
     }
     
     private IEnumerator MoveDownRoutine()

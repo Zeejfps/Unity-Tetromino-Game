@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 public sealed class Tetromino : MonoBehaviour
@@ -14,15 +12,7 @@ public sealed class Tetromino : MonoBehaviour
     {
         var cellCount = m_Cells.Length;
         m_Offsets = new Vector3[cellCount];
-        for (var i = 0; i < cellCount; i++)
-        {
-            var cell = m_Cells[i];
-            var cellPosition = cell.transform.localPosition;
-            var xOffset = Mathf.Round(cellPosition.x);
-            var yOffset = Mathf.Round(cellPosition.y);
-            m_Offsets[i] = new Vector3(xOffset, yOffset, 0f);
-            //Debug.Log($"Offset[{i}]: {m_Offsets[i]}");
-        }
+        CalculateOffsets();
 
         m_Grid = m_GridFactory.Create();
         FillGridAtMyPosition();
@@ -160,5 +150,58 @@ public sealed class Tetromino : MonoBehaviour
         }
 
         return false;
+    }
+
+    public bool TryRotate()
+    {
+        ClearGridAtMyPosition();
+        transform.Rotate(Vector3.forward, 90f);
+        CalculateOffsets();
+
+        if (IsInValidPosition())
+        {
+            FillGridAtMyPosition();
+            return true;
+        }
+        
+        // Undo rotation
+        transform.Rotate(Vector3.forward, -90f);
+        CalculateOffsets();
+        FillGridAtMyPosition();
+        return false;
+    }
+
+    private bool IsInValidPosition()
+    {
+        var cellCount = m_Cells.Length;
+        var myPosition = transform.position;
+        for (var i = 0; i < cellCount; i++)
+        {
+            var offset = m_Offsets[i];
+            var gridPos = WorldToGridPosition(myPosition + offset);
+            if (gridPos.y < 0)
+                return false;
+            if (gridPos.x >= m_Grid.Width)
+                return false;
+            if (gridPos.x < 0)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void CalculateOffsets()
+    {
+        var cellCount = m_Cells.Length;
+        var myPosition = transform.position;
+        for (var i = 0; i < cellCount; i++)
+        {
+            var cell = m_Cells[i];
+            var cellPosition = cell.transform.position;
+            var xOffset = Mathf.Round(myPosition.x - cellPosition.x);
+            var yOffset = Mathf.Round(myPosition.y - cellPosition.y);
+            m_Offsets[i] = new Vector3(xOffset, yOffset, 0f);
+            //Debug.Log($"Offset[{i}]: {m_Offsets[i]}");
+        }
     }
 }

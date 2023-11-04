@@ -20,21 +20,21 @@ sealed class Grid : IGrid
 {
     public int Width { get; }
     
-    private Cell[] m_Cells;
+    private readonly ICell[] m_Cells;
     
     public Grid(int width, int height)
     {
         Width = width;
-        m_Cells = new Cell[width * height];
+        m_Cells = new ICell[width * height];
     }
     
-    public void Fill(Vector2Int pos, Cell cell)
+    public void Fill(Vector2Int pos, ICell cell)
     {
         var index = pos.x + pos.y * Width;
         m_Cells[index] = cell;
     }
 
-    public void Clear(Vector2Int pos, Cell cell)
+    public void Clear(Vector2Int pos, ICell cell)
     {
         var index = pos.x + pos.y * Width;
         if (m_Cells[index] == cell)
