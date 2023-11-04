@@ -1,13 +1,19 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private GridFactory m_GridFactory;
     [SerializeField] private Tetromino m_TetrominoPrefab;
     [SerializeField] private Tetromino m_Tetromino;
 
+    private IGrid m_Grid;
+    private List<int> m_CompletedRowsCache = new();
+    
     private void Start()
     {
+        m_Grid = m_GridFactory.Create();
         StartCoroutine(MoveDownRoutine());
     }
 
@@ -30,6 +36,34 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             if (!m_Tetromino.TryMoveDown())
             {
+                m_CompletedRowsCache.Clear();
+                for (var y = 0; y < m_Grid.Height; y++)
+                {
+                    var isRowComplete = true;
+                    for (var x = 0; x < m_Grid.Width; x++)
+                    {
+                        if (!m_Grid.IsOccupied(x, y))
+                        {
+                            isRowComplete = false;
+                            break;
+                        }
+                    }
+                    if (isRowComplete)
+                        m_CompletedRowsCache.Add(y);
+                }
+
+                if (m_CompletedRowsCache.Count > 0)
+                {
+                    for (var x = 0; x < m_Grid.Width; x++)
+                    {
+                        foreach (var y in m_CompletedRowsCache)
+                        {
+                            var cell = m_Grid.GetAndClear(x, y);
+                            cell.Destroy();
+                        }
+                    }
+                }
+                
                 m_Tetromino = Instantiate(m_TetrominoPrefab);
             }
         }

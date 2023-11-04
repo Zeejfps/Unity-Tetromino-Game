@@ -20,12 +20,14 @@ public sealed class GridFactory : ScriptableObject
 sealed class Grid : IGrid
 {
     public int Width { get; }
-    
+    public int Height { get; }
+
     private readonly ICell[] m_Cells;
     
     public Grid(int width, int height)
     {
         Width = width;
+        Height = height;
         m_Cells = new ICell[width * height];
     }
     
@@ -42,15 +44,34 @@ sealed class Grid : IGrid
             m_Cells[index] = null;
     }
 
+    public ICell GetAndClear(int x, int y)
+    {
+        var index = ComputeIndex(x, y);
+        var cell = m_Cells[index];
+        m_Cells[index] = null;
+        return cell;
+    }
+
+    public bool IsOccupied(int x, int y)
+    {
+        var index = ComputeIndex(x, y);
+        return m_Cells[index] != null;
+    }
+
     public bool IsOccupied(Vector2Int pos)
     {
-        var index = ComputeIndex(pos);
-        return m_Cells[index] != null;
+        return IsOccupied(pos.x, pos.y);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int ComputeIndex(Vector2Int pos)
     {
-        return pos.x + pos.y * Width;
+        return ComputeIndex(pos.x, pos.y);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int ComputeIndex(int x, int y)
+    {
+        return x + y * Width;
     }
 }

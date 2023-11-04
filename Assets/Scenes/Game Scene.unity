@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102ccadf82b9d2c47b54118fbf0c6ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_GridFactory: {fileID: 11400000, guid: 470971ab5bfd7184180f9930af7f522d, type: 2}
   m_TetrominoPrefab: {fileID: 3773182805473686452, guid: 28d428d1e382b074aa0043367acbcfec, type: 3}
   m_Tetromino: {fileID: 8570810179609803304}
 --- !u!1 &688678926
