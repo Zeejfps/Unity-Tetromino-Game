@@ -68,6 +68,7 @@ public sealed class GameController : MonoBehaviour
 
     private void StartGame()
     {
+        m_GameScore.ResetPoints();
         m_Tetromino = m_TetrominoSpawner.Spawn();
         m_MoveDownRoutine = StartCoroutine(MoveDownRoutine());
     }

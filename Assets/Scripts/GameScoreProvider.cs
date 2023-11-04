@@ -41,6 +41,11 @@ sealed class GameScore : IGameScore
         TotalPoints += points;
     }
 
+    public void ResetPoints()
+    {
+        TotalPoints = 0;
+    }
+
     private void OnTotalPointsChanged(int totalPoints)
     {
         PointsChanged?.Invoke(totalPoints);

@@ -7,4 +7,5 @@ public interface IGameScore
     int TotalPoints { get; }
     
     void IncreasePoints(int points);
+    void ResetPoints();
 }
