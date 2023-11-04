@@ -33,8 +33,13 @@ sealed class Grid : IGrid
     
     public void Fill(Vector2Int pos, ICell cell)
     {
-        var index = ComputeIndex(pos);
-        m_Cells[index] = cell;
+        Fill(pos.x, pos.y, cell);
+    }
+
+    public void Fill(int x, int y, ICell cell)
+    {
+        var index = ComputeIndex(x, y);
+        m_Cells[index] = cell;    
     }
 
     public void Clear(Vector2Int pos, ICell cell)
