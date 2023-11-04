@@ -3,7 +3,8 @@ using UnityEngine;
 public sealed class Tetromino : MonoBehaviour
 {
     [SerializeField] private GridFactory m_GridFactory;
-
+    [SerializeField] private Transform m_Pivot;
+    
     private Vector3[] m_Offsets;
     private IGrid m_Grid;
     private Cell[] m_Cells;
@@ -103,7 +104,7 @@ public sealed class Tetromino : MonoBehaviour
     public bool TryRotate()
     {
         ClearGridAtMyPosition();
-        transform.Rotate(Vector3.forward, 90f);
+        m_Pivot.Rotate(Vector3.forward, 90f);
         CalculateOffsets();
 
         if (IsInValidPosition())
@@ -113,7 +114,7 @@ public sealed class Tetromino : MonoBehaviour
         }
         
         // Undo rotation
-        transform.Rotate(Vector3.forward, -90f);
+        m_Pivot.Rotate(Vector3.forward, -90f);
         CalculateOffsets();
         FillGridAtMyPosition();
         return false;
