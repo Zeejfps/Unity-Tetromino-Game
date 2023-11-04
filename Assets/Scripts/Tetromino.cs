@@ -26,36 +26,28 @@ public sealed class Tetromino : MonoBehaviour
 
         m_Grid = m_GridFactory.Create();
         FillGridAtMyPosition();
-        StartCoroutine(MoveDownRoutine());
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-            TryMoveLeft();
-        else if (Input.GetKeyDown(KeyCode.D))
-            TryMoveRight();
-    }
-
-    private IEnumerator MoveDownRoutine()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.5f);
-            MoveDown();
-        }
-    }
-
-    private void TryMoveLeft()
+    public bool TryMoveLeft()
     {
         if (CanMoveLeft())
+        {
             MoveLeft();
+            return true;
+        }
+
+        return false;
     }
 
-    private void TryMoveRight()
+    public bool TryMoveRight()
     {
         if (CanMoveRight())
+        {
             MoveRight();
+            return true;
+        }
+
+        return false;
     }
 
     private bool CanMoveRight()
@@ -87,7 +79,22 @@ public sealed class Tetromino : MonoBehaviour
 
         return true;
     }
-    
+
+    private bool CanMoveDown()
+    {
+        var cellCount = m_Cells.Length;
+        var myPosition = transform.position;
+        for (var i = 0; i < cellCount; i++)
+        {
+            var offset = m_Offsets[i];
+            var gridPos = WorldToGridPosition(myPosition + offset);
+            if (gridPos.y <= 0)
+                return false;
+        }
+
+        return true;
+    }
+
     private void MoveRight()
     {
         ClearGridAtMyPosition();
@@ -101,18 +108,11 @@ public sealed class Tetromino : MonoBehaviour
         transform.position += Vector3.left;
         FillGridAtMyPosition();
     }
-    
+
     private void MoveDown()
     {
-        var myPosition = transform.position;
-        if (myPosition.y <= 0)
-            return;
-        
         ClearGridAtMyPosition();
-        
-        myPosition += Vector3.down;
-        transform.position = myPosition;
-
+        transform.position += Vector3.down;
         FillGridAtMyPosition();
     }
 
@@ -147,7 +147,18 @@ public sealed class Tetromino : MonoBehaviour
         return new Vector2Int
         {
             x = (int)(worldPosition.x + m_Grid.Width * 0.5),
-            y = (int)(worldPosition.x + m_Grid.Width * 0.5)
+            y = (int)(worldPosition.y)
         };
+    }
+
+    public bool TryMoveDown()
+    {
+        if (CanMoveDown())
+        {
+            MoveDown();
+            return true;
+        }
+
+        return false;
     }
 }
