@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public sealed class GameController : MonoBehaviour
 {
     [SerializeField] private GridFactory m_GridFactory;
-    [SerializeField] private Tetromino m_TetrominoPrefab;
-    [SerializeField] private Tetromino m_Tetromino;
+    [SerializeField] private TetrominoSpawnerFactory m_TetrominoSpawnerFactory;
 
     private IGrid m_Grid;
     private List<int> m_CompletedRowsCache;
+    private Tetromino m_Tetromino;
+    private ITetrominoSpawner m_TetrominoSpawner;
     
     private void Start()
     {
-        m_Grid = m_GridFactory.Create();
         m_CompletedRowsCache = new();
+        m_Grid = m_GridFactory.Create();
+        m_TetrominoSpawner = m_TetrominoSpawnerFactory.Create();
+        m_Tetromino = m_TetrominoSpawner.Spawn();
         StartCoroutine(MoveDownRoutine());
     }
 
@@ -43,7 +46,7 @@ public class GameController : MonoBehaviour
                 m_Tetromino.Decompose();
                 m_Tetromino = null;
                 yield return FindAndClearCompletedRowsRoutine();
-                m_Tetromino = Instantiate(m_TetrominoPrefab);
+                m_Tetromino = m_TetrominoSpawner.Spawn();
             }
         }
     }

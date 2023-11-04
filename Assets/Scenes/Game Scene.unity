@@ -168,8 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_GridFactory: {fileID: 11400000, guid: 470971ab5bfd7184180f9930af7f522d, type: 2}
-  m_TetrominoPrefab: {fileID: 3773182805473686452, guid: 28d428d1e382b074aa0043367acbcfec, type: 3}
-  m_Tetromino: {fileID: 1341436568}
+  m_TetrominoSpawnerFactory: {fileID: 11400000, guid: eebe23bf2612cc14fbdade5c19c032a2, type: 2}
 --- !u!1 &688678926
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,17 +438,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1341436568 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8997031408725994018, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-  m_PrefabInstance: {fileID: 5803054222422144168}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c1755281b170724d9cbeafa73d0a686, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1738719118
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,63 +585,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879045461}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &5803054222422144168
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 284462013373136979, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8188902410661835077, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
-      propertyPath: m_Name
-      value: S Tetromino
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -663,4 +594,3 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 1738719119}
   - {fileID: 1789946875}
-  - {fileID: 5803054222422144168}

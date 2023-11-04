@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 431148393b474e7aa6844b0d4c1d478c, type: 3}
+  m_Name: Tetromino Spawner Factory
+  m_EditorClassIdentifier: 
+  m_GridFactory: {fileID: 11400000, guid: 470971ab5bfd7184180f9930af7f522d, type: 2}
+  m_TetrominoPrefabs:
+  - {fileID: 3773182805473686452, guid: 28d428d1e382b074aa0043367acbcfec, type: 3}
+  - {fileID: 6191582267790398142, guid: cb2324c712a45da4b8e3d8fe0f52da30, type: 3}
+  - {fileID: 8746265273413936315, guid: 36e6df43abe55db44b22612cd7cab3ec, type: 3}
+  - {fileID: 8997031408725994018, guid: 5841d6e83cf1dc0449c2cb85a4c177b1, type: 3}
+  - {fileID: 7271664722287433947, guid: bdc7681fb92c4064d82d6d449219a60c, type: 3}
