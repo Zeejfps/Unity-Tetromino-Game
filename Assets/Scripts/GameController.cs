@@ -11,6 +11,7 @@ public sealed class GameController : MonoBehaviour
     [SerializeField] private TetrominoSpawnerProvider m_TetrominoSpawnerProvider;
     [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
+    [SerializeField] private GameScoreProvider m_GameScoreProvider;
     
     private IGrid m_Grid;
     private List<int> m_CompletedRowsCache;
@@ -18,6 +19,8 @@ public sealed class GameController : MonoBehaviour
     private ITetrominoSpawner m_TetrominoSpawner;
     private ITouchGestureDetector m_TouchGestureDetector;
     private IGameStateMachine m_GameStateMachine;
+    private IGameScore m_GameScore;
+    
     private Coroutine m_MoveDownRoutine;
 
     private void Awake()
@@ -27,6 +30,7 @@ public sealed class GameController : MonoBehaviour
         m_CompletedRowsCache = new();
         
         m_Grid = m_GridProvider.Get();
+        m_GameScore = m_GameScoreProvider.Get();
         m_TetrominoSpawner = m_TetrominoSpawnerProvider.Get();
         m_GameStateMachine = m_GameStateMachineProvider.Get();
         m_TouchGestureDetector = m_TouchGestureDetectorProvider.Get();
@@ -139,6 +143,27 @@ public sealed class GameController : MonoBehaviour
         FindCompletedRows();
         
         //Debug.Log($"Completed Rows: {m_CompletedRowsCache.Count}");
+
+        var completedRowsCount = m_CompletedRowsCache.Count;
+        if (completedRowsCount > 0)
+        {
+            if (completedRowsCount > 3)
+            {
+                m_GameScore.IncreasePoints(800);
+            }
+            else if (completedRowsCount > 2)
+            {
+                m_GameScore.IncreasePoints(500);
+            }
+            else if (completedRowsCount > 1)
+            {
+                m_GameScore.IncreasePoints(300);
+            }
+            else
+            {
+                m_GameScore.IncreasePoints(100);
+            }
+        }
         
         for (var x = 0; x < m_Grid.Width; x++)
         {
