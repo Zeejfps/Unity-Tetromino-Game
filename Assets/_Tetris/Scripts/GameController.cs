@@ -68,7 +68,6 @@ public sealed class GameController : MonoBehaviour
 
     private void StartGame()
     {
-        m_GameScore.ResetPoints();
         m_Tetromino = m_TetrominoSpawner.Spawn();
         m_MoveDownRoutine = StartCoroutine(MoveDownRoutine());
     }
@@ -80,6 +79,7 @@ public sealed class GameController : MonoBehaviour
 
     private IEnumerator RestartGameRoutine()
     {
+        m_GameScore.ResetPoints();
         for (var x = 0; x < m_Grid.Width; x++)
         {
             for (var y = 0; y < m_Grid.Height; y++)
