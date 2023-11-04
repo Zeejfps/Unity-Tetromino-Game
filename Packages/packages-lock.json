@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.envdev.easefunctions": {
+      "version": "https://github.com/Zeejfps/EaseFunctions-Unity.git#floats",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f5cd84e4d6d8b094405a33d870cd7f783a33517e"
+    },
     "com.unity.collab-proxy": {
       "version": "2.2.0",
       "depth": 0,

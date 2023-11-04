@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using EnvDev;
 using UnityEngine;
 
 public sealed class Cell : MonoBehaviour, ICell, IAnimate
@@ -17,7 +18,7 @@ public sealed class Cell : MonoBehaviour, ICell, IAnimate
         {
             var startPosition = transform.position;
             var targetPosition = transform.position + Vector3.down * m_MoveDownCount;
-            this.Animate(0.25f, t => t, t =>
+            this.Animate(0.25f, EaseFunctions.BounceOut, t =>
             {
                 transform.position = Vector3.LerpUnclamped(startPosition, targetPosition, t);
             });
@@ -28,7 +29,7 @@ public sealed class Cell : MonoBehaviour, ICell, IAnimate
     public void Destroy()
     {
         var startScale = transform.localScale;
-        this.Animate(0.15f, t => t, t =>
+        this.Animate(0.25f, EaseFunctions.CubicOut, t =>
         {
             transform.localScale = Vector3.LerpUnclamped(startScale, Vector3.zero, t);
         }, () =>
