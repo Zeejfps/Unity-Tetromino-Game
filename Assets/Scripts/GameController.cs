@@ -9,11 +9,12 @@ public class GameController : MonoBehaviour
     [SerializeField] private Tetromino m_Tetromino;
 
     private IGrid m_Grid;
-    private List<int> m_CompletedRowsCache = new();
+    private List<int> m_CompletedRowsCache;
     
     private void Start()
     {
         m_Grid = m_GridFactory.Create();
+        m_CompletedRowsCache = new();
         StartCoroutine(MoveDownRoutine());
     }
 
@@ -25,7 +26,7 @@ public class GameController : MonoBehaviour
             m_Tetromino.TryMoveRight();
         else if (Input.GetKeyDown(KeyCode.R))
             m_Tetromino.TryRotate();
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S))
             m_Tetromino.TryMoveDown();
     }
     
@@ -36,52 +37,61 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             if (!m_Tetromino.TryMoveDown())
             {
-                m_CompletedRowsCache.Clear();
-                for (var y = 0; y < m_Grid.Height; y++)
-                {
-                    var isRowComplete = true;
-                    for (var x = 0; x < m_Grid.Width; x++)
-                    {
-                        if (!m_Grid.IsOccupied(x, y))
-                        {
-                            isRowComplete = false;
-                            break;
-                        }
-                    }
-                    if (isRowComplete)
-                        m_CompletedRowsCache.Add(y);
-                }
-
-                //Debug.Log($"Completed Rows: {m_CompletedRowsCache.Count}");
-                foreach (var y in m_CompletedRowsCache)
-                {
-                    for (var x = 0; x < m_Grid.Width; x++)
-                    {
-                        var cell = m_Grid.GetAndClear(x, y);
-                        cell.Destroy();
-                    }
-                    //Debug.Log($"Cleared Row: {y}");
-                }
-
-                for (var i = 0; i < m_CompletedRowsCache.Count; i++)
-                {
-                    var yStart = m_CompletedRowsCache[0];
-                    for (var y = yStart + 1; y < m_Grid.Height; y++)
-                    {
-                        for (var x = 0; x < m_Grid.Width; x++)
-                        {
-                            var cell = m_Grid.GetAndClear(x, y);
-                            if (cell != null)
-                            {
-                                cell.MoveDown();
-                                m_Grid.Fill(x, y - 1, cell);
-                            }
-                        }
-                    }
-                }
-                
+                FindAndClearCompletedRows();
                 m_Tetromino = Instantiate(m_TetrominoPrefab);
             }
+        }
+    }
+
+    private void FindAndClearCompletedRows()
+    {
+        FindCompletedRows();
+        
+        //Debug.Log($"Completed Rows: {m_CompletedRowsCache.Count}");
+        foreach (var y in m_CompletedRowsCache)
+        {
+            for (var x = 0; x < m_Grid.Width; x++)
+            {
+                var cell = m_Grid.GetAndClear(x, y);
+                cell.Destroy();
+            }
+            //Debug.Log($"Cleared Row: {y}");
+        }
+
+        for (var i = 0; i < m_CompletedRowsCache.Count; i++)
+        {
+            var yStart = m_CompletedRowsCache[0];
+            for (var y = yStart + 1; y < m_Grid.Height; y++)
+            {
+                for (var x = 0; x < m_Grid.Width; x++)
+                {
+                    var cell = m_Grid.GetAndClear(x, y);
+                    if (cell != null)
+                    {
+                        cell.MoveDown();
+                        m_Grid.Fill(x, y - 1, cell);
+                    }
+                }
+            }
+        }
+    }
+
+    private void FindCompletedRows()
+    {
+        m_CompletedRowsCache.Clear();
+        for (var y = 0; y < m_Grid.Height; y++)
+        {
+            var isRowComplete = true;
+            for (var x = 0; x < m_Grid.Width; x++)
+            {
+                if (!m_Grid.IsOccupied(x, y))
+                {
+                    isRowComplete = false;
+                    break;
+                }
+            }
+            if (isRowComplete)
+                m_CompletedRowsCache.Add(y);
         }
     }
 }
