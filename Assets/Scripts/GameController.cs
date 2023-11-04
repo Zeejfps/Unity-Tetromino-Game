@@ -69,10 +69,10 @@ public class GameController : MonoBehaviour
 
         for (var i = 0; i < m_CompletedRowsCache.Count; i++)
         {
-            var yStart = m_CompletedRowsCache[0];
-            for (var y = yStart + 1; y < m_Grid.Height; y++)
+            for (var x = 0; x < m_Grid.Width; x++)
             {
-                for (var x = 0; x < m_Grid.Width; x++)
+                var yStart = m_CompletedRowsCache[0];
+                for (var y = yStart + 1; y < m_Grid.Height; y++)
                 {
                     var cell = m_Grid.GetAndClear(x, y);
                     if (cell != null)
