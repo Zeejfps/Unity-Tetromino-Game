@@ -72,6 +72,54 @@ public sealed class GameController : MonoBehaviour
         if (m_GameStateMachine.State == GameState.Playing)
             m_GameStateMachine.TransitionTo(GameState.Paused);
     }
+    
+    private void OnGameStarted()
+    {
+        ResetTotalLinesCleared();
+        UpdateLevel();
+        UpdateDelay();
+        SpawnTetromino();
+        StartUpdateGameRoutine();
+    }
+
+    private void OnGamePaused()
+    {
+        StopUpdateGameRoutine();
+    }
+
+    private void OnGameResumed()
+    {
+        if (m_Tetromino == null) 
+            SpawnTetromino();
+
+        StartUpdateGameRoutine();
+    }
+
+    private void OnGameEnded()
+    {
+        StopUpdateGameRoutine();
+    }
+
+    private void OnGameRestarted()
+    {
+        StartCoroutine(RestartGameRoutine());
+    }
+    
+    private IEnumerator OnTetrominoLanded()
+    {
+        AwardPointsForLanding();
+        m_Iterations = 0;
+        m_Tetromino.DecomposeAndDestroy();
+        m_Tetromino = null;
+        yield return FindAndClearCompletedRowsRoutine();
+        m_Tetromino = m_TetrominoSpawner.Spawn();
+        if (!m_Tetromino.IsInValidPosition())
+        {
+            m_Tetromino.Destroy();
+            m_Tetromino = null;
+            m_GameStateMachine.TransitionTo(GameState.GameOver);
+        }
+    }
 
     private void RotateInput_OnPerformed(IInput input)
     {
@@ -128,54 +176,6 @@ public sealed class GameController : MonoBehaviour
         else if (currstate == GameState.GameOver)
         {
             OnGameEnded();
-        }
-    }
-
-    private void OnGameStarted()
-    {
-        ResetTotalLinesCleared();
-        UpdateLevel();
-        UpdateDelay();
-        SpawnTetromino();
-        StartUpdateGameRoutine();
-    }
-
-    private void OnGamePaused()
-    {
-        StopUpdateGameRoutine();
-    }
-
-    private void OnGameResumed()
-    {
-        if (m_Tetromino == null) 
-            SpawnTetromino();
-
-        StartUpdateGameRoutine();
-    }
-
-    private void OnGameEnded()
-    {
-        StopUpdateGameRoutine();
-    }
-
-    private void OnGameRestarted()
-    {
-        StartCoroutine(RestartGameRoutine());
-    }
-    
-    private IEnumerator OnTetrominoLanded()
-    {
-        AwardPointsLanding();
-        m_Iterations = 0;
-        m_Tetromino.DecomposeAndDestroy();
-        m_Tetromino = null;
-        yield return FindAndClearCompletedRowsRoutine();
-        m_Tetromino = m_TetrominoSpawner.Spawn();
-        if (!m_Tetromino.IsInValidPosition())
-        {
-            m_Tetromino.Destroy();
-            m_Tetromino = null;
-            m_GameStateMachine.TransitionTo(GameState.GameOver);
         }
     }
 
@@ -239,7 +239,7 @@ public sealed class GameController : MonoBehaviour
         }
     }
 
-    private void AwardPointsLanding()
+    private void AwardPointsForLanding()
     {
         var actualLevel = Mathf.Max(m_InitialLevel, m_Level);
         var pointAward = ( (m_Grid.Height + 1 + (3 * actualLevel)) - m_Iterations );
@@ -251,7 +251,7 @@ public sealed class GameController : MonoBehaviour
         FindCompletedRows();
         UpdateLevel();
         UpdateDelay();
-        AwardPoints();
+        AwardPointsForCompletedRows();
         yield return ClearCompletedRows();
     }
 
@@ -279,7 +279,7 @@ public sealed class GameController : MonoBehaviour
         m_UpdateGameDelay = new WaitForSeconds(delayInSeconds);
     }
 
-    private void AwardPoints()
+    private void AwardPointsForCompletedRows()
     {
         var completedRowsCount = m_CompletedRowsCache.Count;
         if (completedRowsCount > 0)
