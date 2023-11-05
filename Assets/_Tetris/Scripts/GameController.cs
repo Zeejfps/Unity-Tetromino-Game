@@ -9,6 +9,7 @@ public sealed class GameController : MonoBehaviour
     [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private GameScoreProvider m_GameScoreProvider;
+    [SerializeField] private GameInputProvider m_GameInputProvider;
     
     private IGrid m_Grid;
     private List<int> m_CompletedRowsCache;
@@ -17,6 +18,7 @@ public sealed class GameController : MonoBehaviour
     private ITouchGestureDetector m_TouchGestureDetector;
     private IGameStateMachine m_GameStateMachine;
     private IGameScore m_GameScore;
+    private IGameInput m_GameInput;
     
     private Coroutine m_MoveDownRoutine;
 
@@ -27,6 +29,7 @@ public sealed class GameController : MonoBehaviour
         m_CompletedRowsCache = new();
         
         m_Grid = m_GridProvider.Get();
+        m_GameInput = m_GameInputProvider.Get();
         m_GameScore = m_GameScoreProvider.Get();
         m_TetrominoSpawner = m_TetrominoSpawnerProvider.Get();
         m_GameStateMachine = m_GameStateMachineProvider.Get();
@@ -36,29 +39,52 @@ public sealed class GameController : MonoBehaviour
     private void Start()
     {
         m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
+        m_GameInput.MoveLeft.Performed += MoveLeftInput_OnPerformed;
+        m_GameInput.MoveRight.Performed += MoveRightInput_OnPerformed;
+        m_GameInput.MoveDown.Performed += MoveDownInput_OnPerformed;
+        m_GameInput.Rotate.Performed += RotateInput_OnPerformed;
+        m_GameInput.InstantDrop.Performed += InstantDropInput_OnPerformed;
     }
 
     private void OnDestroy()
     {
         m_GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
+        m_GameInput.MoveLeft.Performed -= MoveLeftInput_OnPerformed;
+        m_GameInput.MoveRight.Performed -= MoveRightInput_OnPerformed;
+        m_GameInput.MoveDown.Performed -= MoveDownInput_OnPerformed;
+        m_GameInput.Rotate.Performed -= RotateInput_OnPerformed;
+        m_GameInput.InstantDrop.Performed -= InstantDropInput_OnPerformed;
     }
 
-    private void Update()
+    private void RotateInput_OnPerformed(IInput input)
     {
-        if (m_Tetromino == null)
-            return;
-        
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || m_TouchGestureDetector.SwipeLeftDetected())
-            m_Tetromino.TryMoveLeft();
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || m_TouchGestureDetector.SwipeRightDetected())
-            m_Tetromino.TryMoveRight();
-        else if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || m_TouchGestureDetector.TouchDetected())
+        if (m_Tetromino != null)
             m_Tetromino.TryRotate();
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+    }
+
+    private void MoveLeftInput_OnPerformed(IInput input)
+    {
+        if (m_Tetromino != null)
+            m_Tetromino.TryMoveLeft();
+    }
+    
+    private void MoveRightInput_OnPerformed(IInput input)
+    {
+        if (m_Tetromino != null)
+            m_Tetromino.TryMoveRight();
+    }
+
+    private void MoveDownInput_OnPerformed(IInput input)
+    {
+        if (m_Tetromino != null)
             m_Tetromino.TryMoveDown();
-        else if (Input.GetKeyDown(KeyCode.Space) || m_TouchGestureDetector.SwipeDownDetected())
+    }
+
+    private void InstantDropInput_OnPerformed(IInput input)
+    {
+        if (m_Tetromino != null)
         {
-            var canMoveDown = true;
+            bool canMoveDown;
             do
             {
                 canMoveDown = m_Tetromino.TryMoveDown();
@@ -140,8 +166,6 @@ public sealed class GameController : MonoBehaviour
     {
         FindCompletedRows();
         
-        //Debug.Log($"Completed Rows: {m_CompletedRowsCache.Count}");
-
         var completedRowsCount = m_CompletedRowsCache.Count;
         if (completedRowsCount > 0)
         {
@@ -169,7 +193,6 @@ public sealed class GameController : MonoBehaviour
             {
                 var cell = m_Grid.GetAndClear(x, y);
                 cell.Destroy();
-                //Debug.Log($"Cleared Row: {y}");
             }
 
             yield return new WaitForSeconds(0.05f);
