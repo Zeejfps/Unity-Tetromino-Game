@@ -23,6 +23,7 @@ public sealed class GameController : MonoBehaviour
     private IGameInput m_GameInput;
 
     private int m_Level;
+    private int m_Iterations;
     private int m_TotalLinesCleared;
     private WaitForSeconds m_UpdateGameDelay;
     private Coroutine m_UpdateGameRoutine;
@@ -110,62 +111,79 @@ public sealed class GameController : MonoBehaviour
     {
         if (prevstate == GameState.GameOver && currstate == GameState.Playing)
         {
-            RestartGame();
+            OnGameRestarted();
         }
         else if (prevstate == GameState.Paused && currstate == GameState.Playing)
         {
-            ResumeGame();
+            OnGameResumed();
         }
         else if (currstate == GameState.Paused)
         {
-            PauseGame();
+            OnGamePaused();
         }
         else if (currstate == GameState.Playing)
         {
-            StartGame();
+            OnGameStarted();
         }
         else if (currstate == GameState.GameOver)
         {
-            EndGame();
+            OnGameEnded();
         }
     }
 
-    private void ResumeGame()
+    private void OnGameResumed()
     {
         if (m_Tetromino == null) 
-            m_Tetromino = m_TetrominoSpawner.Spawn();
-        
-        m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
+            SpawnTetromino();
+
+        StartUpdateGameRoutine();
     }
 
-    private void PauseGame()
+    private void OnGamePaused()
     {
-        if (m_UpdateGameRoutine != null)
-        {
-            StopCoroutine(m_UpdateGameRoutine);
-            m_UpdateGameRoutine = null;
-        }
+        StopUpdateGameRoutine();
     }
 
-    private void EndGame()
+    private void OnGameEnded()
     {
-        if (m_UpdateGameRoutine != null)
-        {
-            StopCoroutine(m_UpdateGameRoutine);
-            m_UpdateGameRoutine = null;
-        }
+        StopUpdateGameRoutine();
     }
 
-    private void StartGame()
+    private void OnGameStarted()
     {
-        m_TotalLinesCleared = 0;
+        ResetTotalLinesCleared();
         UpdateLevel();
         UpdateDelay();
+        SpawnTetromino();
+        StartUpdateGameRoutine();
+    }
+
+    private void SpawnTetromino()
+    {
         m_Tetromino = m_TetrominoSpawner.Spawn();
+    }
+
+    private void StopUpdateGameRoutine()
+    {
+        if (m_UpdateGameRoutine != null)
+        {
+            StopCoroutine(m_UpdateGameRoutine);
+            m_UpdateGameRoutine = null;
+        }
+    }
+    
+    private void StartUpdateGameRoutine()
+    {
+        StopUpdateGameRoutine();
         m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
     }
 
-    private void RestartGame()
+    private void ResetTotalLinesCleared()
+    {
+        m_TotalLinesCleared = 0;
+    }
+
+    private void OnGameRestarted()
     {
         StartCoroutine(RestartGameRoutine());
     }
@@ -174,7 +192,7 @@ public sealed class GameController : MonoBehaviour
     {
         m_GameScore.ResetPoints();
         yield return DestroyAllCells();
-        StartGame();
+        OnGameStarted();
     }
 
     private IEnumerator DestroyAllCells()
@@ -200,6 +218,8 @@ public sealed class GameController : MonoBehaviour
             yield return m_UpdateGameDelay;
             if (m_Tetromino != null && !m_Tetromino.TryMoveDown())
             {
+                AwardPointsLanding();
+                m_Iterations = 0;
                 m_Tetromino.DecomposeAndDestroy();
                 m_Tetromino = null;
                 yield return FindAndClearCompletedRowsRoutine();
@@ -211,7 +231,15 @@ public sealed class GameController : MonoBehaviour
                     m_GameStateMachine.TransitionTo(GameState.GameOver);
                 }
             }
+            m_Iterations++;
         }
+    }
+
+    private void AwardPointsLanding()
+    {
+        var actualLevel = Mathf.Max(m_InitialLevel, m_Level);
+        var pointAward = ( (m_Grid.Height + 1 + (3 * actualLevel)) - m_Iterations );
+        m_GameScore.IncreasePoints(pointAward);
     }
 
     private IEnumerator FindAndClearCompletedRowsRoutine()
