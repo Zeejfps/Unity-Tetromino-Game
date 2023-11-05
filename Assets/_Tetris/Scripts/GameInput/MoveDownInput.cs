@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 
-sealed class MoveDownInput : IInput, IUpdatableInput
+sealed class MoveDownInput : PlayingStateGameInput
 {
-    public event InputPerformedCallback Performed;
-    public void Update()
+    public MoveDownInput(IGameStateMachine gameStateMachine) : base(gameStateMachine)
+    {
+    }
+    
+    protected override void OnUpdate()
     {
         if (Input.GetKeyDown(KeyCode.S) ||
             Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Performed?.Invoke(this);
+            OnPerformed();
         }
     }
 }

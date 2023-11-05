@@ -4,6 +4,7 @@
 public sealed class GameInputProvider : ScriptableObject
 {
     [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
+    [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     
     private IGameInput m_GameInput;
     
@@ -16,12 +17,13 @@ public sealed class GameInputProvider : ScriptableObject
             var inputUpdater = go.AddComponent<GameInputUpdater>();
             
             var touchGestureDetector = m_TouchGestureDetectorProvider.Get();
+            var gameStateMachine = m_GameStateMachineProvider.Get();
             
-            var moveLeftInput = new MoveLeftInput(touchGestureDetector);
-            var moveRightInput = new MoveRightInput(touchGestureDetector);
-            var moveDownInput = new MoveDownInput();
-            var rotateInput = new RotateInput(touchGestureDetector);
-            var instantDropInput = new InstantDropInput(touchGestureDetector);
+            var moveLeftInput = new MoveLeftInput(gameStateMachine, touchGestureDetector);
+            var moveRightInput = new MoveRightInput(gameStateMachine, touchGestureDetector);
+            var moveDownInput = new MoveDownInput(gameStateMachine);
+            var rotateInput = new RotateInput(gameStateMachine, touchGestureDetector);
+            var instantDropInput = new InstantDropInput(gameStateMachine, touchGestureDetector);
             
             inputUpdater.Add(moveLeftInput);
             inputUpdater.Add(moveRightInput);

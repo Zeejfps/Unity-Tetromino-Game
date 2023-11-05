@@ -1,23 +1,21 @@
 ﻿using UnityEngine;
 
-sealed class MoveRightInput : IInput, IUpdatableInput
+sealed class MoveRightInput : PlayingStateGameInput
 {
-    public event InputPerformedCallback Performed;
-    
     private readonly ITouchGestureDetector m_TouchGestureDetector;
-
-    public MoveRightInput(ITouchGestureDetector touchGestureDetector)
+    
+    public MoveRightInput(IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) : base(gameStateMachine)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }
-
-    public void Update()
+    
+    protected override void OnUpdate()
     {
         if (Input.GetKeyDown(KeyCode.D) ||
             Input.GetKeyDown(KeyCode.RightArrow) ||
             m_TouchGestureDetector.SwipeRightDetected())
         {
-            Performed?.Invoke(this);
+            OnPerformed();
         }
     }
 }

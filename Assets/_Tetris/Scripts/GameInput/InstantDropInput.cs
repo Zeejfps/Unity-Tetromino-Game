@@ -1,22 +1,20 @@
 ﻿using UnityEngine;
 
-sealed class InstantDropInput : IInput, IUpdatableInput
+sealed class InstantDropInput : PlayingStateGameInput
 {
-    public event InputPerformedCallback Performed;
-
     private readonly ITouchGestureDetector m_TouchGestureDetector;
-
-    public InstantDropInput(ITouchGestureDetector touchGestureDetector)
+    
+    public InstantDropInput(IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) : base(gameStateMachine)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }
 
-    public void Update()
+    protected override void OnUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Space) ||
             m_TouchGestureDetector.SwipeDownDetected())
         {
-            Performed?.Invoke(this);
+            OnPerformed();
         }
     }
 }

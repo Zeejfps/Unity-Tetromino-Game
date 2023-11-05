@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
 
-sealed class RotateInput : IInput, IUpdatableInput
+sealed class RotateInput : PlayingStateGameInput
 {
-    public event InputPerformedCallback Performed;
-    
     private readonly ITouchGestureDetector m_TouchGestureDetector;
 
-    public RotateInput(ITouchGestureDetector touchGestureDetector)
+    public RotateInput(IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector)
+        : base(gameStateMachine)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }
 
-    public void Update()
+    protected override void OnUpdate()
     {
         if (Input.GetKeyDown(KeyCode.R) ||
             Input.GetKeyDown(KeyCode.UpArrow) ||
             Input.GetKeyDown(KeyCode.W) ||
             m_TouchGestureDetector.TouchDetected())
         {
-            Performed?.Invoke(this);
+            OnPerformed();
         }
     }
 }
