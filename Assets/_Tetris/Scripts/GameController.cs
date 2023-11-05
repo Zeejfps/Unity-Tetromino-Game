@@ -24,7 +24,7 @@ public sealed class GameController : MonoBehaviour
 
     private int m_Level;
     private int m_TotalLinesCleared;
-    private WaitForSeconds m_UpdateDelay;
+    private WaitForSeconds m_UpdateGameDelay;
     private Coroutine m_UpdateGameRoutine;
 
     private void Awake()
@@ -96,15 +96,13 @@ public sealed class GameController : MonoBehaviour
             m_Tetromino.TryMoveDown();
     }
 
-    private void InstantDropInput_OnPerformed(IInput input)
+    private async void InstantDropInput_OnPerformed(IInput input)
     {
         if (m_Tetromino != null)
         {
-            bool canMoveDown;
-            do
-            {
-                canMoveDown = m_Tetromino.TryMoveDown();
-            } while (canMoveDown);
+            StopCoroutine(m_UpdateGameRoutine);
+            await m_Tetromino.DropInstantly();
+            m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
         }
     }
 
@@ -199,7 +197,7 @@ public sealed class GameController : MonoBehaviour
     {
         while (true)
         {
-            yield return m_UpdateDelay;
+            yield return m_UpdateGameDelay;
             if (m_Tetromino != null && !m_Tetromino.TryMoveDown())
             {
                 m_Tetromino.DecomposeAndDestroy();
@@ -246,7 +244,7 @@ public sealed class GameController : MonoBehaviour
     {
         var actualLevel = Mathf.Max(m_InitialLevel, m_Level);
         var delayInSeconds = ((11f - actualLevel) * 0.05f);  // [seconds]
-        m_UpdateDelay = new WaitForSeconds(delayInSeconds);
+        m_UpdateGameDelay = new WaitForSeconds(delayInSeconds);
     }
 
     private void AwardPoints()

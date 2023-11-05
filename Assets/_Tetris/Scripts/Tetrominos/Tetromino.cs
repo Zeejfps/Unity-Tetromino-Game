@@ -1,7 +1,8 @@
-using System;
+using System.Threading.Tasks;
+using EnvDev;
 using UnityEngine;
 
-public sealed class Tetromino : MonoBehaviour
+public sealed class Tetromino : MonoBehaviour, IAnimate
 {
     [SerializeField] private GridProvider m_GridFactory;
     [SerializeField] private Transform m_Pivot;
@@ -179,4 +180,28 @@ public sealed class Tetromino : MonoBehaviour
         go.SetActive(false);
         Destroy(go);
     }
+    
+    public Task DropInstantly()
+    {
+        var startPosition = transform.position;
+        bool canMoveDown;
+        do
+        {
+            canMoveDown = TryMoveDown();
+        } while (canMoveDown);
+
+        var tsc = new TaskCompletionSource<bool>();
+        var targetPosition = transform.position;
+        this.Animate(0.1f, EaseFunctions.CubicIn, t =>
+        {
+            transform.position = Vector3.LerpUnclamped(startPosition, targetPosition, t);
+        }, () =>
+        {
+            tsc.SetResult(true);
+        });
+
+        return tsc.Task;
+    }
+
+    public Coroutine AnimationRoutine { get; set; }
 }
