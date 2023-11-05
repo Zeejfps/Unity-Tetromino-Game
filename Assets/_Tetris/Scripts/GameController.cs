@@ -183,6 +183,12 @@ public sealed class GameController : MonoBehaviour
     {
         m_Tetromino = m_TetrominoSpawner.Spawn();
     }
+    
+    private void StartUpdateGameRoutine()
+    {
+        StopUpdateGameRoutine();
+        m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
+    }
 
     private void StopUpdateGameRoutine()
     {
@@ -193,22 +199,16 @@ public sealed class GameController : MonoBehaviour
         }
     }
     
-    private void StartUpdateGameRoutine()
-    {
-        StopUpdateGameRoutine();
-        m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
-    }
-
-    private void ResetTotalLinesCleared()
-    {
-        m_TotalLinesCleared = 0;
-    }
-
     private IEnumerator RestartGameRoutine()
     {
         m_GameScore.ResetPoints();
         yield return DestroyAllCells();
         OnGameStarted();
+    }
+
+    private void ResetTotalLinesCleared()
+    {
+        m_TotalLinesCleared = 0;
     }
 
     private IEnumerator DestroyAllCells()
@@ -242,10 +242,34 @@ public sealed class GameController : MonoBehaviour
     private void AwardPointsForLanding()
     {
         var actualLevel = Mathf.Max(m_InitialLevel, m_Level);
-        var pointAward = ( (m_Grid.Height + 1 + (3 * actualLevel)) - m_Iterations );
+        var pointAward = (m_Grid.Height + 1 + (3 * actualLevel)) - m_Iterations;
         m_GameScore.IncreasePoints(pointAward);
     }
 
+    private void AwardPointsForCompletedRows()
+    {
+        var completedRowsCount = m_CompletedRowsCache.Count;
+        if (completedRowsCount > 0)
+        {
+            if (completedRowsCount > 3)
+            {
+                m_GameScore.IncreasePoints(800);
+            }
+            else if (completedRowsCount > 2)
+            {
+                m_GameScore.IncreasePoints(500);
+            }
+            else if (completedRowsCount > 1)
+            {
+                m_GameScore.IncreasePoints(300);
+            }
+            else
+            {
+                m_GameScore.IncreasePoints(100);
+            }
+        }
+    }
+    
     private IEnumerator FindAndClearCompletedRowsRoutine()
     {
         FindCompletedRows();
@@ -277,30 +301,6 @@ public sealed class GameController : MonoBehaviour
         var actualLevel = Mathf.Max(m_InitialLevel, m_Level);
         var delayInSeconds = ((11f - actualLevel) * 0.05f);  // [seconds]
         m_UpdateGameDelay = new WaitForSeconds(delayInSeconds);
-    }
-
-    private void AwardPointsForCompletedRows()
-    {
-        var completedRowsCount = m_CompletedRowsCache.Count;
-        if (completedRowsCount > 0)
-        {
-            if (completedRowsCount > 3)
-            {
-                m_GameScore.IncreasePoints(800);
-            }
-            else if (completedRowsCount > 2)
-            {
-                m_GameScore.IncreasePoints(500);
-            }
-            else if (completedRowsCount > 1)
-            {
-                m_GameScore.IncreasePoints(300);
-            }
-            else
-            {
-                m_GameScore.IncreasePoints(100);
-            }
-        }
     }
 
     private IEnumerator ClearCompletedRows()
