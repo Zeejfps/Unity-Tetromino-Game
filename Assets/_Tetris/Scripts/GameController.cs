@@ -56,13 +56,14 @@ public sealed class GameController : MonoBehaviour
     
     private void OnApplicationFocus(bool hasFocus)
     {
-        if (!hasFocus)
+        if (!hasFocus && m_GameStateMachine.State == GameState.Playing)
             m_GameStateMachine.TransitionTo(GameState.Paused);
     }
 
     private void OnApplicationPause(bool pauseStatus)
     {
-        m_GameStateMachine.TransitionTo(GameState.Paused);
+        if (m_GameStateMachine.State == GameState.Playing)
+            m_GameStateMachine.TransitionTo(GameState.Paused);
     }
 
     private void RotateInput_OnPerformed(IInput input)
@@ -121,7 +122,7 @@ public sealed class GameController : MonoBehaviour
         }
         else if (currstate == GameState.GameOver)
         {
-           EndGame();
+            EndGame();
         }
     }
 
