@@ -79,45 +79,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         FillGridAtMyPosition();
         return false;
     }
-
-    private void ClearGridAtMyPosition()
-    {
-        var cellCount = m_Cells.Length;
-        var myPosition = transform.position;
-        for (var i = 0; i < cellCount; i++)
-        {
-            var cell = m_Cells[i];
-            var offset = m_Offsets[i];
-            var gridPos = WorldToGridPosition(myPosition + offset);
-            m_Grid.Clear(gridPos, cell);
-        }
-    }
-
-    private void FillGridAtMyPosition()
-    {
-        if (IsPreview)
-            return;
-        
-        var cellCount = m_Cells.Length;
-        var myPosition = transform.position;
-        for (var i = 0; i < cellCount; i++)
-        {
-            var cell = m_Cells[i];
-            var offset = m_Offsets[i];
-            var gridPos = WorldToGridPosition(myPosition + offset);
-            m_Grid.Fill(gridPos, cell);
-        }
-    }
-
-    private Vector2Int WorldToGridPosition(Vector3 worldPosition)
-    {
-        return new Vector2Int
-        {
-            x = (int)(Mathf.Floor(worldPosition.x) + m_Grid.Width * 0.5),
-            y = (int)(Mathf.Floor(worldPosition.y))
-        };
-    }
-
+    
     public bool TryMoveDown()
     {
         ClearGridAtMyPosition();
@@ -155,6 +117,66 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         CalculateOffsets();
         FillGridAtMyPosition();
         return false;
+    }
+    
+    public Task DropInstantly()
+    {
+        var startPosition = transform.position;
+        bool canMoveDown;
+        do
+        {
+            canMoveDown = TryMoveDown();
+        } while (canMoveDown);
+
+        var tsc = new TaskCompletionSource<bool>();
+        var targetPosition = transform.position;
+        this.Animate(0.1f, EaseFunctions.CubicIn, t =>
+        {
+            transform.position = Vector3.LerpUnclamped(startPosition, targetPosition, t);
+        }, () =>
+        {
+            tsc.SetResult(true);
+        });
+
+        return tsc.Task;
+    }
+
+    private void ClearGridAtMyPosition()
+    {
+        var cellCount = m_Cells.Length;
+        var myPosition = transform.position;
+        for (var i = 0; i < cellCount; i++)
+        {
+            var cell = m_Cells[i];
+            var offset = m_Offsets[i];
+            var gridPos = WorldToGridPosition(myPosition + offset);
+            m_Grid.Clear(gridPos, cell);
+        }
+    }
+
+    private void FillGridAtMyPosition()
+    {
+        if (IsPreview)
+            return;
+        
+        var cellCount = m_Cells.Length;
+        var myPosition = transform.position;
+        for (var i = 0; i < cellCount; i++)
+        {
+            var cell = m_Cells[i];
+            var offset = m_Offsets[i];
+            var gridPos = WorldToGridPosition(myPosition + offset);
+            m_Grid.Fill(gridPos, cell);
+        }
+    }
+
+    private Vector2Int WorldToGridPosition(Vector3 worldPosition)
+    {
+        return new Vector2Int
+        {
+            x = (int)(Mathf.Floor(worldPosition.x) + m_Grid.Width * 0.5),
+            y = (int)(Mathf.Floor(worldPosition.y))
+        };
     }
 
     public bool IsInValidPosition()
@@ -256,28 +278,6 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         var go = gameObject;
         go.SetActive(false);
         Destroy(go);
-    }
-    
-    public Task DropInstantly()
-    {
-        var startPosition = transform.position;
-        bool canMoveDown;
-        do
-        {
-            canMoveDown = TryMoveDown();
-        } while (canMoveDown);
-
-        var tsc = new TaskCompletionSource<bool>();
-        var targetPosition = transform.position;
-        this.Animate(0.1f, EaseFunctions.CubicIn, t =>
-        {
-            transform.position = Vector3.LerpUnclamped(startPosition, targetPosition, t);
-        }, () =>
-        {
-            tsc.SetResult(true);
-        });
-
-        return tsc.Task;
     }
 
     public Coroutine AnimationRoutine { get; set; }
