@@ -128,3 +128,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc019ca1b8414bb9b7f2c1f683201828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Renderer: {fileID: 5669720615278003655}
+  m_PreviewMaterial: {fileID: 2100000, guid: 47f22654f3a0baf47b576dbe613fe850, type: 2}

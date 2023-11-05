@@ -6,6 +6,24 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
 {
     [SerializeField] private GridProvider m_GridFactory;
     [SerializeField] private Transform m_Pivot;
+
+    private bool m_IsPreview;
+
+    public bool IsPreview
+    {
+        get => m_IsPreview;
+        set
+        {
+            m_IsPreview = value;
+            if (m_IsPreview)
+            {
+                foreach (var cell in m_Cells)
+                {
+                    cell.DisplayAsPreview();
+                }
+            }
+        }
+    }
     
     private Vector3[] m_Offsets;
     private IGrid m_Grid;
@@ -23,7 +41,11 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
 
     private void Start()
     {
-        FillGridAtMyPosition();
+        if (!IsPreview)
+        {
+            FillGridAtMyPosition();
+            UpdatePreview();
+        }
     }
 
     public bool TryMoveLeft()
@@ -33,6 +55,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         if (IsInValidPosition())
         {
             FillGridAtMyPosition();
+            UpdatePreview();
             return true;
         }
 
@@ -48,6 +71,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         if (IsInValidPosition())
         {
             FillGridAtMyPosition();
+            UpdatePreview();
             return true;
         }
 
@@ -71,6 +95,9 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
 
     private void FillGridAtMyPosition()
     {
+        if (IsPreview)
+            return;
+        
         var cellCount = m_Cells.Length;
         var myPosition = transform.position;
         for (var i = 0; i < cellCount; i++)
@@ -119,6 +146,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         if (IsInValidPosition())
         {
             FillGridAtMyPosition();
+            UpdatePreview();
             return true;
         }
         
@@ -165,8 +193,57 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         }
     }
 
+    private void UpdatePreview()
+    {
+        var previewPosition = ComputePreviewPosition();
+        DisplayPreview(previewPosition);
+    }
+
+    private Vector3 ComputePreviewPosition()
+    {
+        var currentPosition = transform.position;
+        bool canMoveDown;
+        do
+        {
+            canMoveDown = TryMoveDown();
+        } while (canMoveDown);
+
+        var previewPosition = transform.position;
+        previewPosition.z += 1f;
+        
+        ClearGridAtMyPosition();
+        transform.position = currentPosition;
+        FillGridAtMyPosition();
+
+        return previewPosition;
+    }
+
+    private Tetromino m_Preview;
+    
+    private void DisplayPreview(Vector3 previewPosition)
+    {
+        if (m_Preview == null)
+        {
+            m_Preview = Instantiate(this, previewPosition, Quaternion.identity, transform.parent);
+            m_Preview.m_Pivot.rotation = m_Pivot.rotation;
+            m_Preview.IsPreview = true;
+        }
+        else
+        {
+            m_Preview.transform.position = previewPosition;
+            m_Preview.m_Pivot.rotation = m_Pivot.rotation;
+        }
+    }
+
     public void DecomposeAndDestroy()
     {
+        if (m_Preview != null)
+        {
+            var previewGo = m_Preview.gameObject;
+            previewGo.SetActive(false);
+            Destroy(previewGo);
+        }
+        
         var myParent = transform.parent;
         foreach (var cell in m_Cells)
             cell.transform.SetParent(myParent);

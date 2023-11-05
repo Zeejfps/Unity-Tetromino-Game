@@ -3,8 +3,11 @@ using UnityEngine;
 
 public sealed class Cell : MonoBehaviour, ICell, IAnimate
 {
+    [SerializeField] private MeshRenderer m_Renderer;
+    [SerializeField] private Material m_PreviewMaterial;
+
     private int m_MoveDownCount;
-    
+
     public void MoveDown()
     {
         m_MoveDownCount++;
@@ -41,4 +44,9 @@ public sealed class Cell : MonoBehaviour, ICell, IAnimate
     }
 
     public Coroutine AnimationRoutine { get; set; }
+
+    public void DisplayAsPreview()
+    {
+        m_Renderer.sharedMaterial = m_PreviewMaterial;
+    }
 }
