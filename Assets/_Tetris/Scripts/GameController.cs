@@ -6,7 +6,6 @@ public sealed class GameController : MonoBehaviour
 {
     [SerializeField] private GridProvider m_GridProvider;
     [SerializeField] private TetrominoSpawnerProvider m_TetrominoSpawnerProvider;
-    [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private GameScoreProvider m_GameScoreProvider;
     [SerializeField] private GameInputProvider m_GameInputProvider;
@@ -15,12 +14,11 @@ public sealed class GameController : MonoBehaviour
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
     private ITetrominoSpawner m_TetrominoSpawner;
-    private ITouchGestureDetector m_TouchGestureDetector;
     private IGameStateMachine m_GameStateMachine;
     private IGameScore m_GameScore;
     private IGameInput m_GameInput;
     
-    private Coroutine m_MoveDownRoutine;
+    private Coroutine m_UpdateGameRoutine;
 
     private void Awake()
     {
@@ -33,7 +31,6 @@ public sealed class GameController : MonoBehaviour
         m_GameScore = m_GameScoreProvider.Get();
         m_TetrominoSpawner = m_TetrominoSpawnerProvider.Get();
         m_GameStateMachine = m_GameStateMachineProvider.Get();
-        m_TouchGestureDetector = m_TouchGestureDetectorProvider.Get();
     }
 
     private void Start()
@@ -104,10 +101,10 @@ public sealed class GameController : MonoBehaviour
         }
         else if (currstate == GameState.GameOver)
         {
-            if (m_MoveDownRoutine != null)
+            if (m_UpdateGameRoutine != null)
             {
-                StopCoroutine(m_MoveDownRoutine);
-                m_MoveDownRoutine = null;
+                StopCoroutine(m_UpdateGameRoutine);
+                m_UpdateGameRoutine = null;
             }
         }
     }
@@ -115,7 +112,7 @@ public sealed class GameController : MonoBehaviour
     private void StartGame()
     {
         m_Tetromino = m_TetrominoSpawner.Spawn();
-        m_MoveDownRoutine = StartCoroutine(MoveDownRoutine());
+        m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
     }
 
     private void RestartGame()
@@ -126,6 +123,12 @@ public sealed class GameController : MonoBehaviour
     private IEnumerator RestartGameRoutine()
     {
         m_GameScore.ResetPoints();
+        yield return DestroyAllCells();
+        StartGame();
+    }
+
+    private IEnumerator DestroyAllCells()
+    {
         for (var x = 0; x < m_Grid.Width; x++)
         {
             for (var y = 0; y < m_Grid.Height; y++)
@@ -138,10 +141,9 @@ public sealed class GameController : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(0.25f);
-        StartGame();
     }
 
-    private IEnumerator MoveDownRoutine()
+    private IEnumerator UpdateGameRoutine()
     {
         while (true)
         {
@@ -165,7 +167,12 @@ public sealed class GameController : MonoBehaviour
     private IEnumerator FindAndClearCompletedRowsRoutine()
     {
         FindCompletedRows();
-        
+        AwardPoints();
+        yield return ClearCompletedRows();
+    }
+
+    private void AwardPoints()
+    {
         var completedRowsCount = m_CompletedRowsCache.Count;
         if (completedRowsCount > 0)
         {
@@ -186,7 +193,10 @@ public sealed class GameController : MonoBehaviour
                 m_GameScore.IncreasePoints(100);
             }
         }
-        
+    }
+
+    private IEnumerator ClearCompletedRows()
+    {
         for (var x = 0; x < m_Grid.Width; x++)
         {
             foreach (var y in m_CompletedRowsCache)
@@ -197,7 +207,7 @@ public sealed class GameController : MonoBehaviour
 
             yield return new WaitForSeconds(0.05f);
         }
-
+        
         for (var i = m_CompletedRowsCache.Count - 1; i >= 0; i--)
         {
             for (var x = 0; x < m_Grid.Width; x++)
