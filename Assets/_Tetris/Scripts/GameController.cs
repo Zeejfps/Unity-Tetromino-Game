@@ -217,21 +217,25 @@ public sealed class GameController : MonoBehaviour
         {
             yield return m_UpdateGameDelay;
             if (m_Tetromino != null && !m_Tetromino.TryMoveDown())
-            {
-                AwardPointsLanding();
-                m_Iterations = 0;
-                m_Tetromino.DecomposeAndDestroy();
-                m_Tetromino = null;
-                yield return FindAndClearCompletedRowsRoutine();
-                m_Tetromino = m_TetrominoSpawner.Spawn();
-                if (!m_Tetromino.IsInValidPosition())
-                {
-                    m_Tetromino.Destroy();
-                    m_Tetromino = null;
-                    m_GameStateMachine.TransitionTo(GameState.GameOver);
-                }
-            }
-            m_Iterations++;
+                yield return OnTetrominoLanded();
+            else
+                m_Iterations++;
+        }
+    }
+
+    private IEnumerator OnTetrominoLanded()
+    {
+        AwardPointsLanding();
+        m_Iterations = 0;
+        m_Tetromino.DecomposeAndDestroy();
+        m_Tetromino = null;
+        yield return FindAndClearCompletedRowsRoutine();
+        m_Tetromino = m_TetrominoSpawner.Spawn();
+        if (!m_Tetromino.IsInValidPosition())
+        {
+            m_Tetromino.Destroy();
+            m_Tetromino = null;
+            m_GameStateMachine.TransitionTo(GameState.GameOver);
         }
     }
 
