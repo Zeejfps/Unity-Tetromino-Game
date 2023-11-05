@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 [DefaultExecutionOrder(-10)]
 sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestureDetector
@@ -10,6 +11,7 @@ sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestur
     private bool m_SwipeLeftDetected;
     private bool m_SwipeRightDetected;
     private bool m_SwipeDownDetected;
+    private bool m_IsTrackingTouch;
     
     public bool SwipeLeftDetected()
     {
@@ -42,13 +44,18 @@ sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestur
         if (touchCount > 0)
         {
             var touch = Input.GetTouch(0);
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+            {
+                return;
+            }
             if (touch.phase == TouchPhase.Began)
             {
+                m_IsTrackingTouch = true;
                 m_SwipeDetected = false;
                 m_PrevTouchPosition = touch.position;
                 m_TouchTotalMoveDelta = Vector2.zero;
             }
-            else if (touch.phase == TouchPhase.Moved)
+            else if (m_IsTrackingTouch && touch.phase == TouchPhase.Moved)
             {
                 var position = touch.position;
                 m_TouchTotalMoveDelta += position - m_PrevTouchPosition;
@@ -72,7 +79,7 @@ sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestur
                     m_SwipeDetected = true;
                 }
             }
-            else if (touch.phase == TouchPhase.Ended)
+            else if (m_IsTrackingTouch && touch.phase == TouchPhase.Ended)
             {
                 var touchMoveDelta = m_TouchTotalMoveDelta;
                 var deltaMagnitude = touchMoveDelta.magnitude;
@@ -98,6 +105,12 @@ sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestur
                     if (touchMoveDelta.y < 0)
                         m_SwipeDownDetected = true;
                 }
+
+                m_IsTrackingTouch = false;
+            }
+            else if (m_IsTrackingTouch && touch.phase == TouchPhase.Canceled)
+            {
+                m_IsTrackingTouch = false;
             }
         }
     }
