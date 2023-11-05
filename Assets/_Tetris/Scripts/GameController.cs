@@ -1,13 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public sealed class GameController : MonoBehaviour
 {
-    [FormerlySerializedAs("m_GridFactory")] 
     [SerializeField] private GridProvider m_GridProvider;
-    [FormerlySerializedAs("m_TetrominoSpawnerFactory")] 
     [SerializeField] private TetrominoSpawnerProvider m_TetrominoSpawnerProvider;
     [SerializeField] private TouchGestureDetectorProvider m_TouchGestureDetectorProvider;
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
@@ -44,6 +41,29 @@ public sealed class GameController : MonoBehaviour
     private void OnDestroy()
     {
         m_GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
+    }
+
+    private void Update()
+    {
+        if (m_Tetromino == null)
+            return;
+        
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || m_TouchGestureDetector.SwipeLeftDetected())
+            m_Tetromino.TryMoveLeft();
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || m_TouchGestureDetector.SwipeRightDetected())
+            m_Tetromino.TryMoveRight();
+        else if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || m_TouchGestureDetector.TouchDetected())
+            m_Tetromino.TryRotate();
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            m_Tetromino.TryMoveDown();
+        else if (Input.GetKeyDown(KeyCode.Space) || m_TouchGestureDetector.SwipeDownDetected())
+        {
+            var canMoveDown = true;
+            do
+            {
+                canMoveDown = m_Tetromino.TryMoveDown();
+            } while (canMoveDown);
+        }
     }
 
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
@@ -95,29 +115,6 @@ public sealed class GameController : MonoBehaviour
         StartGame();
     }
 
-    private void Update()
-    {
-        if (m_Tetromino == null)
-            return;
-        
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || m_TouchGestureDetector.SwipeLeftDetected())
-            m_Tetromino.TryMoveLeft();
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || m_TouchGestureDetector.SwipeRightDetected())
-            m_Tetromino.TryMoveRight();
-        else if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || m_TouchGestureDetector.TouchDetected())
-            m_Tetromino.TryRotate();
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-            m_Tetromino.TryMoveDown();
-        else if (Input.GetKeyDown(KeyCode.Space) || m_TouchGestureDetector.SwipeDownDetected())
-        {
-            var canMoveDown = true;
-            do
-            {
-                canMoveDown = m_Tetromino.TryMoveDown();
-            } while (canMoveDown);
-        }
-    }
-    
     private IEnumerator MoveDownRoutine()
     {
         while (true)
