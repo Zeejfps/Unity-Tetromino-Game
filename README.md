@@ -6,7 +6,7 @@ Can be played in a WebGL build here:
 https://evasilyev.com/games/tetris
 
 ## Screenshots
-![In Game Screenshot](https://github.com/Zeejfps/Unity-Tetromino-Game/blob/main/Screenshots/Screenshot%202023-11-05%20102312.png)
+![In Game Screenshot](https://media.githubusercontent.com/media/Zeejfps/Unity-Tetromino-Game/main/Screenshots/Screenshot%202023-11-05%20130228.png)
 
 ## Resources
 This turns out to be a great resource for internal worksing of Tetris.
