@@ -332,6 +332,8 @@ public sealed class GameController : MonoBehaviour
                 }
             }
         }
+
+        yield return new WaitForSeconds(0.25f);
     }
 
     private void FindCompletedRows()
