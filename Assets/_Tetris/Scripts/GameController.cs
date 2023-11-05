@@ -131,11 +131,12 @@ public sealed class GameController : MonoBehaviour
         }
     }
 
-    private void OnGameResumed()
+    private void OnGameStarted()
     {
-        if (m_Tetromino == null) 
-            SpawnTetromino();
-
+        ResetTotalLinesCleared();
+        UpdateLevel();
+        UpdateDelay();
+        SpawnTetromino();
         StartUpdateGameRoutine();
     }
 
@@ -144,18 +145,38 @@ public sealed class GameController : MonoBehaviour
         StopUpdateGameRoutine();
     }
 
+    private void OnGameResumed()
+    {
+        if (m_Tetromino == null) 
+            SpawnTetromino();
+
+        StartUpdateGameRoutine();
+    }
+
     private void OnGameEnded()
     {
         StopUpdateGameRoutine();
     }
 
-    private void OnGameStarted()
+    private void OnGameRestarted()
     {
-        ResetTotalLinesCleared();
-        UpdateLevel();
-        UpdateDelay();
-        SpawnTetromino();
-        StartUpdateGameRoutine();
+        StartCoroutine(RestartGameRoutine());
+    }
+    
+    private IEnumerator OnTetrominoLanded()
+    {
+        AwardPointsLanding();
+        m_Iterations = 0;
+        m_Tetromino.DecomposeAndDestroy();
+        m_Tetromino = null;
+        yield return FindAndClearCompletedRowsRoutine();
+        m_Tetromino = m_TetrominoSpawner.Spawn();
+        if (!m_Tetromino.IsInValidPosition())
+        {
+            m_Tetromino.Destroy();
+            m_Tetromino = null;
+            m_GameStateMachine.TransitionTo(GameState.GameOver);
+        }
     }
 
     private void SpawnTetromino()
@@ -181,11 +202,6 @@ public sealed class GameController : MonoBehaviour
     private void ResetTotalLinesCleared()
     {
         m_TotalLinesCleared = 0;
-    }
-
-    private void OnGameRestarted()
-    {
-        StartCoroutine(RestartGameRoutine());
     }
 
     private IEnumerator RestartGameRoutine()
@@ -220,22 +236,6 @@ public sealed class GameController : MonoBehaviour
                 yield return OnTetrominoLanded();
             else
                 m_Iterations++;
-        }
-    }
-
-    private IEnumerator OnTetrominoLanded()
-    {
-        AwardPointsLanding();
-        m_Iterations = 0;
-        m_Tetromino.DecomposeAndDestroy();
-        m_Tetromino = null;
-        yield return FindAndClearCompletedRowsRoutine();
-        m_Tetromino = m_TetrominoSpawner.Spawn();
-        if (!m_Tetromino.IsInValidPosition())
-        {
-            m_Tetromino.Destroy();
-            m_Tetromino = null;
-            m_GameStateMachine.TransitionTo(GameState.GameOver);
         }
     }
 
