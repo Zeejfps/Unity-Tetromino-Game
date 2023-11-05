@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,6 +53,17 @@ public sealed class GameController : MonoBehaviour
         m_GameInput.Rotate.Performed -= RotateInput_OnPerformed;
         m_GameInput.InstantDrop.Performed -= InstantDropInput_OnPerformed;
     }
+    
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+            m_GameStateMachine.TransitionTo(GameState.Paused);
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        m_GameStateMachine.TransitionTo(GameState.Paused);
+    }
 
     private void RotateInput_OnPerformed(IInput input)
     {
@@ -95,17 +107,47 @@ public sealed class GameController : MonoBehaviour
         {
             RestartGame();
         }
+        else if (prevstate == GameState.Paused && currstate == GameState.Playing)
+        {
+            ResumeGame();
+        }
+        else if (currstate == GameState.Paused)
+        {
+            PauseGame();
+        }
         else if (currstate == GameState.Playing)
         {
             StartGame();
         }
         else if (currstate == GameState.GameOver)
         {
-            if (m_UpdateGameRoutine != null)
-            {
-                StopCoroutine(m_UpdateGameRoutine);
-                m_UpdateGameRoutine = null;
-            }
+           EndGame();
+        }
+    }
+
+    private void ResumeGame()
+    {
+        if (m_Tetromino == null) 
+            m_Tetromino = m_TetrominoSpawner.Spawn();
+        
+        m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
+    }
+
+    private void PauseGame()
+    {
+        if (m_UpdateGameRoutine != null)
+        {
+            StopCoroutine(m_UpdateGameRoutine);
+            m_UpdateGameRoutine = null;
+        }
+    }
+
+    private void EndGame()
+    {
+        if (m_UpdateGameRoutine != null)
+        {
+            StopCoroutine(m_UpdateGameRoutine);
+            m_UpdateGameRoutine = null;
         }
     }
 

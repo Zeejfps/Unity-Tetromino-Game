@@ -2,5 +2,6 @@
 {
     Start,
     Playing,
-    GameOver
+    Paused,
+    GameOver,
 }
