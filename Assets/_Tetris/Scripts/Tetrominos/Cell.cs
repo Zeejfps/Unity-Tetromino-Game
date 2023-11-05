@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using EnvDev;
+﻿using EnvDev;
 using UnityEngine;
 
 public sealed class Cell : MonoBehaviour, ICell, IAnimate
@@ -14,6 +12,8 @@ public sealed class Cell : MonoBehaviour, ICell, IAnimate
 
     private void Update()
     {
+        transform.up = Vector3.up;
+        
         if (m_MoveDownCount > 0)
         {
             var startPosition = transform.position;
