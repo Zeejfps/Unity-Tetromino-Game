@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public sealed class GameController : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public sealed class GameController : MonoBehaviour
     [SerializeField] private GameScoreProvider m_GameScoreProvider;
     [SerializeField] private GameInputProvider m_GameInputProvider;
     
+    [Header("Settings")]
+    [Range(1, 10)]
+    [SerializeField] private int m_InitialLevel = 1;
+    
     private IGrid m_Grid;
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
@@ -17,7 +22,10 @@ public sealed class GameController : MonoBehaviour
     private IGameStateMachine m_GameStateMachine;
     private IGameScore m_GameScore;
     private IGameInput m_GameInput;
-    
+
+    private int m_Level;
+    private int m_TotalLinesCleared;
+    private WaitForSeconds m_UpdateDelay;
     private Coroutine m_UpdateGameRoutine;
 
     private void Awake()
@@ -153,6 +161,9 @@ public sealed class GameController : MonoBehaviour
 
     private void StartGame()
     {
+        m_TotalLinesCleared = 0;
+        UpdateLevel();
+        UpdateDelay();
         m_Tetromino = m_TetrominoSpawner.Spawn();
         m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
     }
@@ -189,7 +200,7 @@ public sealed class GameController : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return m_UpdateDelay;
             if (m_Tetromino != null && !m_Tetromino.TryMoveDown())
             {
                 m_Tetromino.DecomposeAndDestroy();
@@ -209,8 +220,34 @@ public sealed class GameController : MonoBehaviour
     private IEnumerator FindAndClearCompletedRowsRoutine()
     {
         FindCompletedRows();
+        UpdateLevel();
+        UpdateDelay();
         AwardPoints();
         yield return ClearCompletedRows();
+    }
+
+    private void UpdateLevel()
+    {
+        var linesCleared = m_TotalLinesCleared;
+        if (linesCleared <= 0)
+        {
+            m_Level = 1;
+        }
+        else if (linesCleared is >= 1 and <= 90)
+        {
+            m_Level = 1 + ((linesCleared - 1) / 10);
+        }
+        else
+        {
+            m_Level = 10;
+        }
+    }
+
+    private void UpdateDelay()
+    {
+        var actualLevel = Mathf.Max(m_InitialLevel, m_Level);
+        var delayInSeconds = ((11f - actualLevel) * 0.05f);  // [seconds]
+        m_UpdateDelay = new WaitForSeconds(delayInSeconds);
     }
 
     private void AwardPoints()
@@ -285,5 +322,7 @@ public sealed class GameController : MonoBehaviour
             if (isRowComplete)
                 m_CompletedRowsCache.Add(y);
         }
+
+        m_TotalLinesCleared += m_CompletedRowsCache.Count;
     }
 }
