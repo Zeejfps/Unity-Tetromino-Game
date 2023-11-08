@@ -10,7 +10,9 @@ public sealed class GameScoreProvider : ScriptableObject
     {
         if (m_GameScore == null)
         {
-            m_GameScore = new GameScore();
+            var gameScore = new GameScore();
+            gameScore.Load();
+            m_GameScore = gameScore;
         }
 
         return m_GameScore;
@@ -36,9 +38,16 @@ sealed class GameScore : IGameScore
         }
     }
 
+    public int BestPoints { get; private set; }
+
     public void IncreasePoints(int points)
     {
         TotalPoints += points;
+        if (TotalPoints > BestPoints)
+        {
+            BestPoints = TotalPoints;
+            Save();
+        }
     }
 
     public void ResetPoints()
@@ -49,5 +58,17 @@ sealed class GameScore : IGameScore
     private void OnTotalPointsChanged(int totalPoints)
     {
         PointsChanged?.Invoke(totalPoints);
+    }
+
+    private const string k_BestPointsPlayerPrefsKey = "BestPointsPlayerPrefsKey";
+
+    private void Save()
+    {
+        PlayerPrefs.SetInt(k_BestPointsPlayerPrefsKey, BestPoints);
+    }
+
+    public void Load()
+    {
+        BestPoints = PlayerPrefs.GetInt(k_BestPointsPlayerPrefsKey, 0);
     }
 }

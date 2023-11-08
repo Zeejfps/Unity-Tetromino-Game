@@ -1,16 +1,22 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class GameOverScreenController : MonoBehaviour
 {
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
+    [SerializeField] private GameScoreProvider m_GameScoreProvider;
+    [SerializeField] private TMP_Text m_ScoreText;
+    [SerializeField] private TMP_Text m_PersonalBestText;
     [SerializeField] private Button m_PlayAgainButton;
-    
+
+    private IGameScore m_GameScore;
     private IGameStateMachine m_GameStateMachine;
 
     private void Awake()
     {
         m_GameStateMachine = m_GameStateMachineProvider.Get();
+        m_GameScore = m_GameScoreProvider.Get();
     }
 
     private void Start()
@@ -45,6 +51,8 @@ public sealed class GameOverScreenController : MonoBehaviour
 
     private void Show()
     {
+        m_ScoreText.text = m_GameScore.TotalPoints.ToString();
+        m_PersonalBestText.text = m_GameScore.BestPoints.ToString();
         gameObject.SetActive(true);
     }
 
