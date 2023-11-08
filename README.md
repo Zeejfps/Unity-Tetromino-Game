@@ -9,7 +9,7 @@ https://evasilyev.com/games/tetris
 ![In Game Screenshot](https://media.githubusercontent.com/media/Zeejfps/Unity-Tetromino-Game/main/Screenshots/Screenshot%202023-11-05%20130228.png)
 
 ## Resources
-This turns out to be a great resource for internal worksing of Tetris.
+This turns out to be a great resource for internal workings of Tetris.
 https://www.colinfahey.com/tetris/tetris.html
 
 ## Files
@@ -17,4 +17,4 @@ Need better name for this section
 ### Controllers
 Classes that listen and handle events
 ### Providers
-Are scriptable objects that work kinda like a depency container but on a much more granular level 
+Are scriptable objects that work kinda like a dependency container but on a much more granular level 
