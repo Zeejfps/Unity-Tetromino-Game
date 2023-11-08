@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public sealed class PauseScreenController : MonoBehaviour
 {
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
+    [SerializeField] private GameObject m_PauseScreen;
     [SerializeField] private Button m_ResumeButton;
     [SerializeField] private Button m_RestartButton;
 
@@ -19,7 +20,8 @@ public sealed class PauseScreenController : MonoBehaviour
         m_ResumeButton.onClick.AddListener(ResumeButton_OnClicked);
         m_RestartButton.onClick.AddListener(RestartButton_OnClicked);
         m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        gameObject.SetActive(m_GameStateMachine.State == GameState.Paused);
+        if (m_GameStateMachine.State == GameState.Paused)
+            ShowScreen();
     }
 
     private void OnDestroy()
@@ -42,6 +44,19 @@ public sealed class PauseScreenController : MonoBehaviour
 
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
     {
-        gameObject.SetActive(currstate == GameState.Paused);
+        if (currstate == GameState.Paused)
+            ShowScreen();
+        else
+            HideScreen();
+    }
+    
+    private void ShowScreen()
+    {
+        m_PauseScreen.SetActive(true);
+    }
+
+    private void HideScreen()
+    {
+        m_PauseScreen.SetActive(false);
     }
 }

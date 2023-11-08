@@ -6,6 +6,7 @@ public sealed class GameOverScreenController : MonoBehaviour
 {
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private GameScoreProvider m_GameScoreProvider;
+    [SerializeField] private GameObject m_GameOverScreen;
     [SerializeField] private TMP_Text m_ScoreText;
     [SerializeField] private TMP_Text m_PersonalBestText;
     [SerializeField] private Button m_PlayAgainButton;
@@ -23,9 +24,9 @@ public sealed class GameOverScreenController : MonoBehaviour
     {
         m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
         if (m_GameStateMachine.State == GameState.GameOver)
-            Show();
+            ShowScreen();
         else
-            Hide();
+            HideScreen();
         
         m_PlayAgainButton.onClick.AddListener(PlayAgainButton_OnClicked);
     }
@@ -44,20 +45,20 @@ public sealed class GameOverScreenController : MonoBehaviour
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
     {
         if (currstate == GameState.GameOver)
-            Show();
+            ShowScreen();
         else
-            Hide();
+            HideScreen();
     }
 
-    private void Show()
+    private void ShowScreen()
     {
         m_ScoreText.text = m_GameScore.TotalPoints.ToString();
         m_PersonalBestText.text = m_GameScore.BestPoints.ToString();
-        gameObject.SetActive(true);
+        m_GameOverScreen.SetActive(true);
     }
 
-    private void Hide()
+    private void HideScreen()
     {
-        gameObject.SetActive(false);
+        m_GameOverScreen.SetActive(false);
     }
 }

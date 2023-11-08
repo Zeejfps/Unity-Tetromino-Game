@@ -1301,9 +1301,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6378621112148069430, guid: bface2214ca780e48975b1222282361c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7066537025103885167, guid: bface2214ca780e48975b1222282361c, type: 3}
       propertyPath: m_Name
-      value: Game Over Screen
+      value: Game Over Screen Controller
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1497,11 +1501,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4166724643834765176, guid: f10fb4556a78c9548be791a806c5306d, type: 3}
       propertyPath: m_Name
-      value: Pause Screen
+      value: Pause Screen Controller
       objectReference: {fileID: 0}
     - target: {fileID: 4166724643834765176, guid: f10fb4556a78c9548be791a806c5306d, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6550010704020400525, guid: f10fb4556a78c9548be791a806c5306d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1612,9 +1620,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2813576908704124721, guid: 79b5c2b050ed64d4286710a4eb23f373, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6099274683217470830, guid: 79b5c2b050ed64d4286710a4eb23f373, type: 3}
       propertyPath: m_Name
-      value: Start Screen
+      value: Start Screen Controller
       objectReference: {fileID: 0}
     - target: {fileID: 6099274683217470830, guid: 79b5c2b050ed64d4286710a4eb23f373, type: 3}
       propertyPath: m_IsActive
