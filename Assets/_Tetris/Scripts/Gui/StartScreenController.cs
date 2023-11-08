@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class StartScreen : MonoBehaviour
+public sealed class StartScreenController : MonoBehaviour
 {
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private Button m_StartGameButton;

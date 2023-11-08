@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class PauseScreen : MonoBehaviour
+public sealed class PauseScreenController : MonoBehaviour
 {
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private Button m_ResumeButton;

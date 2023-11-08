@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class GameOverScreen : MonoBehaviour
+public sealed class GameOverScreenController : MonoBehaviour
 {
     [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private Button m_PlayAgainButton;
