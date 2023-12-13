@@ -10,9 +10,11 @@ public sealed class TetrisDiContainer : DiContainer
         var grid = new Grid(10, 20);
         var tetrominoSpawner = new TetrominoSpawner(grid, m_TetrominoPrefabs);
         var gameStateMachine = new TetrisGameStateMachine();
+        var gameScore = new GameScore();
         
         RegisterSingleton<IGrid>(grid);
         RegisterSingleton<ITetrominoSpawner>(tetrominoSpawner);
         RegisterSingleton<IGameStateMachine>(gameStateMachine);
+        RegisterSingleton<IGameScore>(gameScore);
     }
 }

@@ -5,19 +5,17 @@ using UnityEngine.UI;
 public sealed class GameOverScreenController : MonoBehaviour
 {
     [SerializeField] private DiContainer m_DiContainer;
-    [SerializeField] private GameScoreProvider m_GameScoreProvider;
     [SerializeField] private GameObject m_GameOverScreen;
     [SerializeField] private TMP_Text m_ScoreText;
     [SerializeField] private TMP_Text m_PersonalBestText;
     [SerializeField] private Button m_PlayAgainButton;
 
-    private IGameScore m_GameScore;
+    [Injected] public IGameScore GameScore { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
 
     private void Awake()
     {
         m_DiContainer.Inject(this);
-        m_GameScore = m_GameScoreProvider.Get();
     }
 
     private void Start()
@@ -52,8 +50,8 @@ public sealed class GameOverScreenController : MonoBehaviour
 
     private void ShowScreen()
     {
-        m_ScoreText.text = m_GameScore.TotalPoints.ToString();
-        m_PersonalBestText.text = m_GameScore.BestPoints.ToString();
+        m_ScoreText.text = GameScore.TotalPoints.ToString();
+        m_PersonalBestText.text = GameScore.BestPoints.ToString();
         m_GameOverScreen.SetActive(true);
     }
 

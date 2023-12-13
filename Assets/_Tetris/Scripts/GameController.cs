@@ -5,7 +5,6 @@ using UnityEngine;
 public sealed class GameController : MonoBehaviour
 {
     [SerializeField] private DiContainer m_DiContainer;
-    [SerializeField] private GameScoreProvider m_GameScoreProvider;
     [SerializeField] private GameInputProvider m_GameInputProvider;
     
     [Header("Settings")]
@@ -15,11 +14,10 @@ public sealed class GameController : MonoBehaviour
     [Injected] public ITetrominoSpawner TetrominoSpawner { get; set; }
     [Injected] public IGrid Grid { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
+    [Injected] public IGameScore GameScore { get; set; }
 
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
-    
-    private IGameScore m_GameScore;
     private IGameInput m_GameInput;
 
     private int m_Level;
@@ -35,9 +33,7 @@ public sealed class GameController : MonoBehaviour
         Application.targetFrameRate = 60;
 
         m_CompletedRowsCache = new();
-        
         m_GameInput = m_GameInputProvider.Get();
-        m_GameScore = m_GameScoreProvider.Get();
     }
 
     private void Start()
@@ -200,7 +196,7 @@ public sealed class GameController : MonoBehaviour
     
     private IEnumerator RestartGameRoutine()
     {
-        m_GameScore.ResetPoints();
+        GameScore.ResetPoints();
         yield return DestroyAllCells();
         OnGameStarted();
     }
@@ -242,7 +238,7 @@ public sealed class GameController : MonoBehaviour
     {
         var actualLevel = Mathf.Max(m_InitialLevel, m_Level);
         var pointAward = (Grid.Height + 1 + (3 * actualLevel)) - m_Iterations;
-        m_GameScore.IncreasePoints(pointAward);
+        GameScore.IncreasePoints(pointAward);
     }
 
     private void AwardPointsForCompletedRows()
@@ -252,19 +248,19 @@ public sealed class GameController : MonoBehaviour
         {
             if (completedRowsCount > 3)
             {
-                m_GameScore.IncreasePoints(800);
+                GameScore.IncreasePoints(800);
             }
             else if (completedRowsCount > 2)
             {
-                m_GameScore.IncreasePoints(500);
+                GameScore.IncreasePoints(500);
             }
             else if (completedRowsCount > 1)
             {
-                m_GameScore.IncreasePoints(300);
+                GameScore.IncreasePoints(300);
             }
             else
             {
-                m_GameScore.IncreasePoints(100);
+                GameScore.IncreasePoints(100);
             }
         }
     }

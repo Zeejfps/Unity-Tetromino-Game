@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Game Input Provider
   m_EditorClassIdentifier: 
   m_TouchGestureDetectorProvider: {fileID: 11400000, guid: d68cf244519c9fd48b056bffb52a2fbd, type: 2}
-  m_GameStateMachineProvider: {fileID: 11400000, guid: 7be7891ddecea284587149293fadc2e4, type: 2}
+  m_DiContainer: {fileID: 11400000, guid: df084880d09331f48927fcec482e12d0, type: 2}
