@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 internal sealed class UnityClockRunner : MonoBehaviour
@@ -12,6 +11,7 @@ internal sealed class UnityClockRunner : MonoBehaviour
 
     private void Update()
     {
-        m_Clock.Tick(Time.deltaTime);
+        if (m_Clock != null)
+            m_Clock.Tick(Time.deltaTime);
     }
 }

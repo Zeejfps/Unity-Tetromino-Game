@@ -545,7 +545,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DiContainer: {fileID: 11400000, guid: df084880d09331f48927fcec482e12d0, type: 2}
-  m_GameInputProvider: {fileID: 11400000, guid: 134b1c0ebc481aa4bac6e985748528f6, type: 2}
   m_InitialLevel: 1
 --- !u!1 &688678926
 GameObject:
