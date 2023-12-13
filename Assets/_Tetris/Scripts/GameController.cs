@@ -12,11 +12,6 @@ public sealed class GameController : Controller
     [Injected] public IGrid Grid { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
     [Injected] public IGameScore GameScore { get; set; }
-    [Injected] public MoveLeftInputAction MoveLeft { get; set; }
-    [Injected] public MoveRightInputAction MoveRight { get; set; }
-    [Injected] public MoveDownInputAction MoveDown { get; set; }
-    [Injected] public RotateInputAction Rotate { get; set; }
-    [Injected] public InstantDropInputAction InstantDrop { get; set; }
     [Injected] public MainInputActions MainInputActions { get; set; }
 
     private readonly List<int> m_CompletedRowsCache = new();
@@ -31,21 +26,21 @@ public sealed class GameController : Controller
     {
         Application.targetFrameRate = 60;
         GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        MoveLeft.Triggered += MoveLeftInput_OnPerformed;
-        MoveRight.Triggered += MoveRightInput_OnPerformed;
-        MoveDown.Triggered += MoveDownInput_OnPerformed;
-        Rotate.Triggered += RotateInput_OnPerformed;
-        InstantDrop.Triggered += InstantDropInput_OnPerformed;
+        MainInputActions.MoveLeftInputAction.Triggered += MoveLeftInput_OnPerformed;
+        MainInputActions.MoveRightInputAction.Triggered += MoveRightInput_OnPerformed;
+        MainInputActions.MoveDownInputAction.Triggered += MoveDownInput_OnPerformed;
+        MainInputActions.RotateInputAction.Triggered += RotateInput_OnPerformed;
+        MainInputActions.InstantDropInputAction.Triggered += InstantDropInput_OnPerformed;
     }
 
     private void OnDestroy()
     {
         GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
-        MoveLeft.Triggered -= MoveLeftInput_OnPerformed;
-        MoveRight.Triggered -= MoveRightInput_OnPerformed;
-        MoveDown.Triggered -= MoveDownInput_OnPerformed;
-        Rotate.Triggered -= RotateInput_OnPerformed;
-        InstantDrop.Triggered -= InstantDropInput_OnPerformed;
+        MainInputActions.MoveLeftInputAction.Triggered -= MoveLeftInput_OnPerformed;
+        MainInputActions.MoveRightInputAction.Triggered -= MoveRightInput_OnPerformed;
+        MainInputActions.MoveDownInputAction.Triggered -= MoveDownInput_OnPerformed;
+        MainInputActions.RotateInputAction.Triggered -= RotateInput_OnPerformed;
+        MainInputActions.InstantDropInputAction.Triggered -= InstantDropInput_OnPerformed;
     }
     
     private void OnApplicationFocus(bool hasFocus)
