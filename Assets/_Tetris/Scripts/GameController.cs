@@ -13,6 +13,7 @@ public sealed class GameController : Controller
     [Injected] public MainInputActions MainInputActions { get; set; }
     [Injected] public ITetrominoSpawner TetrominoSpawner { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
+    [Injected] public PauseResumeInputAction PauseResumeInputAction { get; set; }
 
     private readonly List<int> m_CompletedRowsCache = new();
     private Tetromino m_Tetromino;
@@ -31,6 +32,8 @@ public sealed class GameController : Controller
         MainInputActions.MoveDownInputAction.Triggered += MoveDownInput_OnPerformed;
         MainInputActions.RotateInputAction.Triggered += RotateInput_OnPerformed;
         MainInputActions.InstantDropInputAction.Triggered += InstantDropInput_OnPerformed;
+        PauseResumeInputAction.Triggered += PauseResumeInputAction_OnTriggered;
+        PauseResumeInputAction.Enable();
     }
 
     private void OnDestroy()
@@ -41,8 +44,9 @@ public sealed class GameController : Controller
         MainInputActions.MoveDownInputAction.Triggered -= MoveDownInput_OnPerformed;
         MainInputActions.RotateInputAction.Triggered -= RotateInput_OnPerformed;
         MainInputActions.InstantDropInputAction.Triggered -= InstantDropInput_OnPerformed;
+        PauseResumeInputAction.Triggered -= PauseResumeInputAction_OnTriggered;
     }
-    
+
     private void OnApplicationFocus(bool hasFocus)
     {
         if (!hasFocus && GameStateMachine.State == GameState.Playing)
@@ -105,6 +109,14 @@ public sealed class GameController : Controller
             m_Tetromino = null;
             GameStateMachine.TransitionTo(GameState.GameOver);
         }
+    }
+    
+    private void PauseResumeInputAction_OnTriggered(IInputAction inputAction)
+    {
+        if (GameStateMachine.State == GameState.Playing)
+            GameStateMachine.TransitionTo(GameState.Paused);
+        else if(GameStateMachine.State == GameState.Paused)
+            GameStateMachine.TransitionTo(GameState.Playing);
     }
 
     private void RotateInput_OnPerformed(IInputAction input)

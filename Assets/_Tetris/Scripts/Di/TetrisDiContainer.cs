@@ -11,7 +11,6 @@ public sealed class TetrisDiContainer : DiContainer, IGridConfig, ITetrominoPref
     
     protected override void OnInit()
     {
-        RegisterSingleton<MainInputActions>();
         RegisterSingleton<IGridConfig>(this);
         RegisterSingleton<ITetrominoPrefabsProvider>(this);
         RegisterSingleton<IGrid, Grid>();
@@ -20,10 +19,14 @@ public sealed class TetrisDiContainer : DiContainer, IGridConfig, ITetrominoPref
         RegisterSingleton<IGameScore, GameScore>();
         RegisterSingleton<IClock, UnityClock>();
         RegisterSingleton<ITouchGestureDetector, LegacyInputSystemTouchGestureDetector>();
+        
+        // Input Actions
+        RegisterSingleton<PauseResumeInputAction>();
         RegisterSingleton<MoveLeftInputAction>();
         RegisterSingleton<MoveRightInputAction>();
         RegisterSingleton<MoveDownInputAction>();
         RegisterSingleton<RotateInputAction>();
         RegisterSingleton<InstantDropInputAction>();
+        RegisterSingleton<MainInputActions>();
     }
 }
