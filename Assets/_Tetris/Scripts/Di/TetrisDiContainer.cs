@@ -1,18 +1,19 @@
 using UnityEngine;
 
 [CreateAssetMenu]
-public sealed class TetrisDiContainer : DiContainer
+public sealed class TetrisDiContainer : DiContainer, ITetrominoPrefabsProvider
 {
     [SerializeField] private Tetromino[] m_TetrominoPrefabs;
 
+    public Tetromino[] Prefabs => m_TetrominoPrefabs;
+    
     protected override void OnInit()
     {
         var grid = new Grid(10, 20);
         RegisterSingleton<IGrid>(grid);
         
-        var tetrominoSpawner = new TetrominoSpawner(grid, m_TetrominoPrefabs);
-        RegisterSingleton<ITetrominoSpawner>(tetrominoSpawner);
-        
+        RegisterSingleton<ITetrominoPrefabsProvider>(this);
+        RegisterSingleton<ITetrominoSpawner, TetrominoSpawner>();
         RegisterSingleton<IGameStateMachine, TetrisGameStateMachine>();
         RegisterSingleton<IGameScore, GameScore>();
         RegisterSingleton<IClock, UnityClock>();
@@ -23,4 +24,5 @@ public sealed class TetrisDiContainer : DiContainer
         RegisterSingleton<RotateInput>();
         RegisterSingleton<InstantDropInput>();
     }
+
 }

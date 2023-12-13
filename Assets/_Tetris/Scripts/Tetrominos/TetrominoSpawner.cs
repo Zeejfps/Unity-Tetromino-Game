@@ -1,23 +1,23 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 sealed class TetrominoSpawner : ITetrominoSpawner
 {
     private readonly IGrid m_Grid;
-    private readonly List<Tetromino> m_TetrominoPrefabs;
+    private readonly ITetrominoPrefabsProvider m_TetrominoPrefabsProvider;
 
-    public TetrominoSpawner(IGrid grid, IEnumerable<Tetromino> tetrominoPrefabs)
+    public TetrominoSpawner(IGrid grid, ITetrominoPrefabsProvider tetrominoPrefabsProvider)
     {
         m_Grid = grid;
-        m_TetrominoPrefabs = new List<Tetromino>(tetrominoPrefabs);
+        m_TetrominoPrefabsProvider = tetrominoPrefabsProvider;
     }
     
     public Tetromino Spawn()
     {
         // NOTE(Zee): This assumes the tetromino origin is the top left
+        var prefabs = m_TetrominoPrefabsProvider.Prefabs;
         var spawnPosY = m_Grid.Height;
-        var rand = Random.Range(0, m_TetrominoPrefabs.Count);
-        var tetrominoPrefab = m_TetrominoPrefabs[rand];
+        var rand = Random.Range(0, prefabs.Length);
+        var tetrominoPrefab = prefabs[rand];
         var tetromino = Object.Instantiate(tetrominoPrefab, new Vector3(0, spawnPosY, 0), Quaternion.identity);
         return tetromino;
     }
