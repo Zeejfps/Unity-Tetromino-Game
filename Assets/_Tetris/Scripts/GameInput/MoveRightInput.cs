@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-sealed class MoveRightInput : PlayingStateGameInput
+public sealed class MoveRightInput : PlayingStateGameInput
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
     

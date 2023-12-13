@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-sealed class RotateInput : PlayingStateGameInput
+public sealed class RotateInput : PlayingStateGameInput
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
 

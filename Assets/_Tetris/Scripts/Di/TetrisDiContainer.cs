@@ -22,19 +22,5 @@ public sealed class TetrisDiContainer : DiContainer
         RegisterSingleton<MoveDownInput>();
         RegisterSingleton<RotateInput>();
         RegisterSingleton<InstantDropInput>();
-        
-        var moveLeftInput = Get<MoveLeftInput>();
-        var moveRightInput = Get<MoveRightInput>();
-        var moveDownInput = Get<MoveDownInput>();
-        var rotateInput = Get<RotateInput>();
-        var instantDropInput = Get<InstantDropInput>();
-        var gameInput = new GameInput(
-            moveLeftInput,
-            moveRightInput,
-            moveDownInput,
-            rotateInput,
-            instantDropInput
-        );
-        RegisterSingleton<IGameInput>(gameInput);
     }
 }

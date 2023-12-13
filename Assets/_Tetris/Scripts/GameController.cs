@@ -14,7 +14,11 @@ public sealed class GameController : MonoBehaviour
     [Injected] public IGrid Grid { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
     [Injected] public IGameScore GameScore { get; set; }
-    [Injected] public IGameInput GameInput { get; set; }
+    [Injected] public MoveLeftInput MoveLeft { get; set; }
+    [Injected] public MoveRightInput MoveRight { get; set; }
+    [Injected] public MoveDownInput MoveDown { get; set; }
+    [Injected] public RotateInput Rotate { get; set; }
+    [Injected] public InstantDropInput InstantDrop { get; set; }
 
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
@@ -34,21 +38,21 @@ public sealed class GameController : MonoBehaviour
     private void Start()
     {
         GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        GameInput.MoveLeft.Performed += MoveLeftInput_OnPerformed;
-        GameInput.MoveRight.Performed += MoveRightInput_OnPerformed;
-        GameInput.MoveDown.Performed += MoveDownInput_OnPerformed;
-        GameInput.Rotate.Performed += RotateInput_OnPerformed;
-        GameInput.InstantDrop.Performed += InstantDropInput_OnPerformed;
+        MoveLeft.Performed += MoveLeftInput_OnPerformed;
+        MoveRight.Performed += MoveRightInput_OnPerformed;
+        MoveDown.Performed += MoveDownInput_OnPerformed;
+        Rotate.Performed += RotateInput_OnPerformed;
+        InstantDrop.Performed += InstantDropInput_OnPerformed;
     }
 
     private void OnDestroy()
     {
         GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
-        GameInput.MoveLeft.Performed -= MoveLeftInput_OnPerformed;
-        GameInput.MoveRight.Performed -= MoveRightInput_OnPerformed;
-        GameInput.MoveDown.Performed -= MoveDownInput_OnPerformed;
-        GameInput.Rotate.Performed -= RotateInput_OnPerformed;
-        GameInput.InstantDrop.Performed -= InstantDropInput_OnPerformed;
+        MoveLeft.Performed -= MoveLeftInput_OnPerformed;
+        MoveRight.Performed -= MoveRightInput_OnPerformed;
+        MoveDown.Performed -= MoveDownInput_OnPerformed;
+        Rotate.Performed -= RotateInput_OnPerformed;
+        InstantDrop.Performed -= InstantDropInput_OnPerformed;
     }
     
     private void OnApplicationFocus(bool hasFocus)

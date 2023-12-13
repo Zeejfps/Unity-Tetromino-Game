@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-sealed class MoveDownInput : PlayingStateGameInput
+public sealed class MoveDownInput : PlayingStateGameInput
 {
     public MoveDownInput(IClock clock, IGameStateMachine gameStateMachine) : base(clock, gameStateMachine)
     {

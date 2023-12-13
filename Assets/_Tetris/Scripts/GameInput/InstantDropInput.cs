@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-sealed class InstantDropInput : PlayingStateGameInput
+public sealed class InstantDropInput : PlayingStateGameInput
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
     

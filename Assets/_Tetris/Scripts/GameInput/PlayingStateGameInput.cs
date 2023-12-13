@@ -1,4 +1,4 @@
-﻿abstract class PlayingStateGameInput : IInput
+﻿public abstract class PlayingStateGameInput : IInput
 {
     public event InputPerformedCallback Performed;
 
