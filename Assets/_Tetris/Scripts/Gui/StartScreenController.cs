@@ -1,19 +1,12 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class StartScreenController : MonoBehaviour
+public sealed class StartScreenController : Controller
 {
-    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private GameObject m_StartScreen;
     [SerializeField] private Button m_StartGameButton;
 
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
-
-    private void Awake()
-    {
-        m_DiContainer.Inject(this);
-    }
 
     private void Start()
     {

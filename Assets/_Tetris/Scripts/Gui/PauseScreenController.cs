@@ -1,19 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class PauseScreenController : MonoBehaviour
+public sealed class PauseScreenController : Controller
 {
-    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private GameObject m_PauseScreen;
     [SerializeField] private Button m_ResumeButton;
     [SerializeField] private Button m_RestartButton;
 
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
-
-    private void Awake()
-    {
-        m_DiContainer.Inject(this);
-    }
 
     private void Start()
     {

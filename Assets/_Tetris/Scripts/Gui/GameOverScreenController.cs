@@ -2,9 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class GameOverScreenController : MonoBehaviour
+public sealed class GameOverScreenController : Controller
 {
-    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private GameObject m_GameOverScreen;
     [SerializeField] private TMP_Text m_ScoreText;
     [SerializeField] private TMP_Text m_PersonalBestText;
@@ -12,11 +11,6 @@ public sealed class GameOverScreenController : MonoBehaviour
 
     [Injected] public IGameScore GameScore { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
-
-    private void Awake()
-    {
-        m_DiContainer.Inject(this);
-    }
 
     private void Start()
     {

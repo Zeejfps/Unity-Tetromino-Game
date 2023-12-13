@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class GameController : MonoBehaviour
+public sealed class GameController : Controller
 {
-    [SerializeField] private DiContainer m_DiContainer;
-    
     [Header("Settings")]
     [Range(1, 10)]
     [SerializeField] private int m_InitialLevel = 1;
@@ -20,7 +18,7 @@ public sealed class GameController : MonoBehaviour
     [Injected] public RotateInput Rotate { get; set; }
     [Injected] public InstantDropInput InstantDrop { get; set; }
 
-    private List<int> m_CompletedRowsCache;
+    private readonly List<int> m_CompletedRowsCache = new();
     private Tetromino m_Tetromino;
     private int m_Level;
     private int m_Iterations;
@@ -28,15 +26,9 @@ public sealed class GameController : MonoBehaviour
     private WaitForSeconds m_UpdateGameDelay;
     private Coroutine m_UpdateGameRoutine;
 
-    private void Awake()
-    {
-        m_DiContainer.Inject(this);
-        Application.targetFrameRate = 60;
-        m_CompletedRowsCache = new List<int>();
-    }
-
     private void Start()
     {
+        Application.targetFrameRate = 60;
         GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
         MoveLeft.Performed += MoveLeftInput_OnPerformed;
         MoveRight.Performed += MoveRightInput_OnPerformed;
