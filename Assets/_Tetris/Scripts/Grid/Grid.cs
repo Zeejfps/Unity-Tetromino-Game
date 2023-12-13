@@ -1,6 +1,12 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+public interface IGridConfig
+{
+    int GridWidth { get; }
+    int GridHeight { get; }
+}
+
 sealed class Grid : IGrid
 {
     public int Width { get; }
@@ -8,8 +14,10 @@ sealed class Grid : IGrid
 
     private readonly ICell[] m_Cells;
     
-    public Grid(int width, int height)
+    public Grid(IGridConfig config)
     {
+        var width = config.GridWidth;
+        var height = config.GridHeight;
         Width = width;
         Height = height;
         m_Cells = new ICell[width * height];
