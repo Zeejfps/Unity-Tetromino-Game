@@ -20,6 +20,19 @@ public abstract class DiContainer : ScriptableObject
         return (T)Get(typeof(T));
     }
     
+    protected void RegisterSingleton<TInterface, TConcrete>() where TConcrete : TInterface
+    {
+        var interfaceType = typeof(TInterface);
+        try
+        {
+            m_TypeToFactoryTable.Add(interfaceType, new SingletonFactory<TConcrete>(this));
+        }
+        catch (ArgumentException)
+        {
+            throw new Exception($"Singleton for {interfaceType} type already registered");
+        }
+    }
+    
     private object Get(Type type)
     {
         if (m_TypeToFactoryTable.TryGetValue(type, out var factory))
@@ -67,6 +80,25 @@ public abstract class DiContainer : ScriptableObject
         {
             var value = Get(prop.PropertyType);
             prop.SetValue(monoBehaviour, value);
+        }
+    }
+    
+    private sealed class SingletonFactory<T> : IFactory
+    {
+        private readonly DiContainer m_DiContainer;
+        private T m_Singleton;
+
+        public SingletonFactory(DiContainer diContainer, T singleton = default)
+        {
+            m_DiContainer = diContainer;
+            m_Singleton = singleton;
+        }
+        
+        public object Create()
+        {
+            if (m_Singleton == null)
+                m_Singleton = (T)m_DiContainer.New(typeof(T));
+            return m_Singleton;
         }
     }
 }
