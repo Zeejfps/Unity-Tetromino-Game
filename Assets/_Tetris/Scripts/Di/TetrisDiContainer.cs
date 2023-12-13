@@ -7,7 +7,7 @@ public sealed class TetrisDiContainer : DiContainer, IGridConfig, ITetrominoPref
     
     public int GridWidth => 10;
     public int GridHeight => 20;
-    public Tetromino[] Prefabs => m_TetrominoPrefabs;
+    public Tetromino[] TetrominoPrefabs => m_TetrominoPrefabs;
     
     protected override void OnInit()
     {

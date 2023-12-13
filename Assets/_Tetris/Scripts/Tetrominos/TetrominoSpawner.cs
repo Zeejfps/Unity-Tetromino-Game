@@ -14,7 +14,7 @@ sealed class TetrominoSpawner : ITetrominoSpawner
     public Tetromino Spawn()
     {
         // NOTE(Zee): This assumes the tetromino origin is the top left
-        var prefabs = m_TetrominoPrefabsProvider.Prefabs;
+        var prefabs = m_TetrominoPrefabsProvider.TetrominoPrefabs;
         var spawnPosY = m_Grid.Height;
         var rand = Random.Range(0, prefabs.Length);
         var tetrominoPrefab = prefabs[rand];

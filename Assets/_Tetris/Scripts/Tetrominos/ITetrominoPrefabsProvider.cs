@@ -1,4 +1,4 @@
 public interface ITetrominoPrefabsProvider
 {
-    Tetromino[] Prefabs { get; }
+    Tetromino[] TetrominoPrefabs { get; }
 }
