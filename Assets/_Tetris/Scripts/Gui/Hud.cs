@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 public sealed class Hud : MonoBehaviour, IAnimate
 {
+    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private GameScoreProvider m_GameScoreProvider;
-    [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private Button m_PauseButton;
     [SerializeField] private TMP_Text m_ScoreText;
 
-    private IGameStateMachine m_GameStateMachine;
+    [Injected] public IGameStateMachine GameStateMachine { get; set; }
     private IGameScore m_GameScore;
 
     private int m_PrevPointCount;
     
     private void Awake()
     {
-        m_GameStateMachine = m_GameStateMachineProvider.Get();
+        m_DiContainer.Inject(this);
         m_GameScore = m_GameScoreProvider.Get();
     }
 
@@ -37,7 +37,7 @@ public sealed class Hud : MonoBehaviour, IAnimate
 
     private void PauseButton_OnClicked()
     {
-        m_GameStateMachine.TransitionTo(GameState.Paused);
+        GameStateMachine.TransitionTo(GameState.Paused);
     }
 
     private void GameScore_OnPointsChanged(int pointsScored)

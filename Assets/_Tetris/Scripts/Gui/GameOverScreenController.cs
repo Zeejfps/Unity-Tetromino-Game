@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public sealed class GameOverScreenController : MonoBehaviour
 {
-    [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
+    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private GameScoreProvider m_GameScoreProvider;
     [SerializeField] private GameObject m_GameOverScreen;
     [SerializeField] private TMP_Text m_ScoreText;
@@ -12,18 +12,18 @@ public sealed class GameOverScreenController : MonoBehaviour
     [SerializeField] private Button m_PlayAgainButton;
 
     private IGameScore m_GameScore;
-    private IGameStateMachine m_GameStateMachine;
+    [Injected] public IGameStateMachine GameStateMachine { get; set; }
 
     private void Awake()
     {
-        m_GameStateMachine = m_GameStateMachineProvider.Get();
+        m_DiContainer.Inject(this);
         m_GameScore = m_GameScoreProvider.Get();
     }
 
     private void Start()
     {
-        m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        if (m_GameStateMachine.State == GameState.GameOver)
+        GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
+        if (GameStateMachine.State == GameState.GameOver)
             ShowScreen();
         else
             HideScreen();
@@ -33,13 +33,13 @@ public sealed class GameOverScreenController : MonoBehaviour
 
     private void OnDestroy()
     {
-        m_GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
+        GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
         m_PlayAgainButton.onClick.RemoveListener(PlayAgainButton_OnClicked);
     }
 
     private void PlayAgainButton_OnClicked()
     {
-        m_GameStateMachine.TransitionTo(GameState.Playing);
+        GameStateMachine.TransitionTo(GameState.Playing);
     }
 
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)

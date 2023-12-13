@@ -5,7 +5,6 @@ using UnityEngine;
 public sealed class GameController : MonoBehaviour
 {
     [SerializeField] private DiContainer m_DiContainer;
-    [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
     [SerializeField] private GameScoreProvider m_GameScoreProvider;
     [SerializeField] private GameInputProvider m_GameInputProvider;
     
@@ -15,11 +14,11 @@ public sealed class GameController : MonoBehaviour
 
     [Injected] public ITetrominoSpawner TetrominoSpawner { get; set; }
     [Injected] public IGrid Grid { get; set; }
-    
+    [Injected] public IGameStateMachine GameStateMachine { get; set; }
+
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
     
-    private IGameStateMachine m_GameStateMachine;
     private IGameScore m_GameScore;
     private IGameInput m_GameInput;
 
@@ -39,12 +38,11 @@ public sealed class GameController : MonoBehaviour
         
         m_GameInput = m_GameInputProvider.Get();
         m_GameScore = m_GameScoreProvider.Get();
-        m_GameStateMachine = m_GameStateMachineProvider.Get();
     }
 
     private void Start()
     {
-        m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
+        GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
         m_GameInput.MoveLeft.Performed += MoveLeftInput_OnPerformed;
         m_GameInput.MoveRight.Performed += MoveRightInput_OnPerformed;
         m_GameInput.MoveDown.Performed += MoveDownInput_OnPerformed;
@@ -54,7 +52,7 @@ public sealed class GameController : MonoBehaviour
 
     private void OnDestroy()
     {
-        m_GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
+        GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
         m_GameInput.MoveLeft.Performed -= MoveLeftInput_OnPerformed;
         m_GameInput.MoveRight.Performed -= MoveRightInput_OnPerformed;
         m_GameInput.MoveDown.Performed -= MoveDownInput_OnPerformed;
@@ -64,14 +62,14 @@ public sealed class GameController : MonoBehaviour
     
     private void OnApplicationFocus(bool hasFocus)
     {
-        if (!hasFocus && m_GameStateMachine.State == GameState.Playing)
-            m_GameStateMachine.TransitionTo(GameState.Paused);
+        if (!hasFocus && GameStateMachine.State == GameState.Playing)
+            GameStateMachine.TransitionTo(GameState.Paused);
     }
 
     private void OnApplicationPause(bool pauseStatus)
     {
-        if (m_GameStateMachine.State == GameState.Playing)
-            m_GameStateMachine.TransitionTo(GameState.Paused);
+        if (GameStateMachine.State == GameState.Playing)
+            GameStateMachine.TransitionTo(GameState.Paused);
     }
     
     private void OnGameStarted()
@@ -118,7 +116,7 @@ public sealed class GameController : MonoBehaviour
         {
             m_Tetromino.Destroy();
             m_Tetromino = null;
-            m_GameStateMachine.TransitionTo(GameState.GameOver);
+            GameStateMachine.TransitionTo(GameState.GameOver);
         }
     }
 
