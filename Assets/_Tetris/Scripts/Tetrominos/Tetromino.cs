@@ -4,11 +4,10 @@ using UnityEngine;
 
 public sealed class Tetromino : MonoBehaviour, IAnimate
 {
-    [SerializeField] private GridProvider m_GridFactory;
+    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private Transform m_Pivot;
 
     private bool m_IsPreview;
-
     public bool IsPreview
     {
         get => m_IsPreview;
@@ -24,15 +23,16 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
             }
         }
     }
+
+    [Injected] public IGrid Grid { get; set; }
     
     private Vector3[] m_Offsets;
-    private IGrid m_Grid;
     private Cell[] m_Cells;
 
     private void Awake()
     {
+        m_DiContainer.Inject(this);
         m_Cells = GetComponentsInChildren<Cell>();
-        m_Grid = m_GridFactory.Get();
 
         var cellCount = m_Cells.Length;
         m_Offsets = new Vector3[cellCount];
@@ -150,7 +150,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
             var cell = m_Cells[i];
             var offset = m_Offsets[i];
             var gridPos = WorldToGridPosition(myPosition + offset);
-            m_Grid.Clear(gridPos, cell);
+            Grid.Clear(gridPos, cell);
         }
     }
 
@@ -166,7 +166,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
             var cell = m_Cells[i];
             var offset = m_Offsets[i];
             var gridPos = WorldToGridPosition(myPosition + offset);
-            m_Grid.Fill(gridPos, cell);
+            Grid.Fill(gridPos, cell);
         }
     }
 
@@ -174,7 +174,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
     {
         return new Vector2Int
         {
-            x = (int)(Mathf.Floor(worldPosition.x) + m_Grid.Width * 0.5),
+            x = (int)(Mathf.Floor(worldPosition.x) + Grid.Width * 0.5),
             y = (int)(Mathf.Floor(worldPosition.y))
         };
     }
@@ -189,11 +189,11 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
             var gridPos = WorldToGridPosition(myPosition + offset);
             if (gridPos.y < 0)
                 return false;
-            if (gridPos.x >= m_Grid.Width)
+            if (gridPos.x >= Grid.Width)
                 return false;
             if (gridPos.x < 0)
                 return false;
-            if (m_Grid.IsOccupied(gridPos))
+            if (Grid.IsOccupied(gridPos))
                 return false;
         }
 

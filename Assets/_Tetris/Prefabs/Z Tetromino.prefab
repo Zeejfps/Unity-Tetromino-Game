@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c1755281b170724d9cbeafa73d0a686, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_GridFactory: {fileID: 11400000, guid: 470971ab5bfd7184180f9930af7f522d, type: 2}
+  m_DiContainer: {fileID: 11400000, guid: df084880d09331f48927fcec482e12d0, type: 2}
   m_Pivot: {fileID: 1234942978130096475}
 --- !u!1 &1561308522867705060
 GameObject:

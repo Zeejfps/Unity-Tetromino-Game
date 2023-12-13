@@ -545,8 +545,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DiContainer: {fileID: 11400000, guid: df084880d09331f48927fcec482e12d0, type: 2}
-  m_GameStateMachineProvider: {fileID: 11400000, guid: 7be7891ddecea284587149293fadc2e4, type: 2}
-  m_GameScoreProvider: {fileID: 11400000, guid: 87441faf46b7bc146a614e90c77938ca, type: 2}
   m_GameInputProvider: {fileID: 11400000, guid: 134b1c0ebc481aa4bac6e985748528f6, type: 2}
   m_InitialLevel: 1
 --- !u!1 &688678926
@@ -978,8 +976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9006310be74aeb4fa2c1c0eb9ab04e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_GameScoreProvider: {fileID: 11400000, guid: 87441faf46b7bc146a614e90c77938ca, type: 2}
-  m_GameStateMachineProvider: {fileID: 11400000, guid: 7be7891ddecea284587149293fadc2e4, type: 2}
+  m_DiContainer: {fileID: 11400000, guid: df084880d09331f48927fcec482e12d0, type: 2}
   m_PauseButton: {fileID: 199346652}
   m_ScoreText: {fileID: 7357923511210853671}
 --- !u!1 &1738719118

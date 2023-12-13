@@ -131,8 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 827f6a0b45aeded47b54764504176142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_GameStateMachineProvider: {fileID: 11400000, guid: 7be7891ddecea284587149293fadc2e4, type: 2}
-  m_GameScoreProvider: {fileID: 11400000, guid: 87441faf46b7bc146a614e90c77938ca, type: 2}
+  m_DiContainer: {fileID: 11400000, guid: df084880d09331f48927fcec482e12d0, type: 2}
   m_GameOverScreen: {fileID: 6378621112148069430}
   m_ScoreText: {fileID: 1034293159090928164}
   m_PersonalBestText: {fileID: 5302822761623534788}
