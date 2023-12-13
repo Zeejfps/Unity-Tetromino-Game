@@ -33,6 +33,19 @@ public abstract class DiContainer : ScriptableObject
         }
     }
     
+    protected void RegisterSingleton<T>(T concrete)
+    {
+        var interfaceType = typeof(T);
+        try
+        {
+            m_TypeToFactoryTable.Add(interfaceType, new SingletonFactory<T>(this, concrete));
+        }
+        catch (ArgumentException)
+        {
+            throw new Exception($"Singleton for {interfaceType} type already registered");
+        }
+    }
+    
     private object Get(Type type)
     {
         if (m_TypeToFactoryTable.TryGetValue(type, out var factory))

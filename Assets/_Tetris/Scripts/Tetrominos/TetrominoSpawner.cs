@@ -1,25 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Providers/Tetromino Spawner Factory")]
-public sealed class TetrominoSpawnerProvider : ScriptableObject
-{
-    [SerializeField] private GridProvider m_GridFactory;
-    [SerializeField] private Tetromino[] m_TetrominoPrefabs;
-    
-    private ITetrominoSpawner m_TetrominoSpawner;
-    
-    public ITetrominoSpawner Get()
-    {
-        if (m_TetrominoSpawner == null)
-        {
-            var grid = m_GridFactory.Get();
-            m_TetrominoSpawner = new TetrominoSpawner(grid, m_TetrominoPrefabs);
-        }
-        
-        return m_TetrominoSpawner;
-    }
-}
 
 sealed class TetrominoSpawner : ITetrominoSpawner
 {
