@@ -1,21 +1,3 @@
-﻿using UnityEngine;
-
-[CreateAssetMenu(menuName = "Providers/Game State Machine Provider")]
-public sealed class GameStateMachineProvider : ScriptableObject
-{
-    private IGameStateMachine m_GameStateMachine;
-    
-    public IGameStateMachine Get()
-    {
-        if (m_GameStateMachine == null)
-        {
-            m_GameStateMachine = new TetrisGameStateMachine();
-        }
-
-        return m_GameStateMachine;
-    }
-}
-
 sealed class TetrisGameStateMachine : IGameStateMachine
 {
     public event GameStateChangedCallback StateChanged;

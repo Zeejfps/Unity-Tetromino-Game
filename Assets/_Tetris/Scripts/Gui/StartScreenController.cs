@@ -4,28 +4,28 @@ using UnityEngine.UI;
 
 public sealed class StartScreenController : MonoBehaviour
 {
-    [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
+    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private GameObject m_StartScreen;
     [SerializeField] private Button m_StartGameButton;
 
-    private IGameStateMachine m_GameStateMachine;
+    [Injected] public IGameStateMachine GameStateMachine { get; set; }
 
     private void Awake()
     {
-        m_GameStateMachine = m_GameStateMachineProvider.Get();
+        m_DiContainer.Inject(this);
     }
 
     private void Start()
     {
-        m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
+        GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
         m_StartGameButton.onClick.AddListener(StartGameButton_OnClicked);
-        if (m_GameStateMachine.State == GameState.Start)
+        if (GameStateMachine.State == GameState.Start)
             ShowScreen();
     }
 
     private void OnDestroy()
     {
-        m_GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
+        GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
         m_StartGameButton.onClick.RemoveListener(StartGameButton_OnClicked);
     }
 
@@ -49,6 +49,6 @@ public sealed class StartScreenController : MonoBehaviour
 
     private void StartGameButton_OnClicked()
     {
-        m_GameStateMachine.TransitionTo(GameState.Playing);
+        GameStateMachine.TransitionTo(GameState.Playing);
     }
 }

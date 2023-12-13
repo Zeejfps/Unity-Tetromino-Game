@@ -1,21 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Providers/Grid Factory")]
-public sealed class GridProvider : ScriptableObject
-{
-    private IGrid m_Grid;
-    
-    public IGrid Get()
-    {
-        if (m_Grid == null)
-        {
-            m_Grid = new Grid(10, 20);
-        }
-
-        return m_Grid;
-    }
-}
 
 sealed class Grid : IGrid
 {
@@ -56,7 +40,7 @@ sealed class Grid : IGrid
 
     public void Clear(Vector2Int pos, ICell cell)
     {
-       Clear(pos.x, pos.y, cell);
+        Clear(pos.x, pos.y, cell);
     }
 
     public void Clear(int x, int y, ICell cell)

@@ -1,23 +1,5 @@
-﻿using System;
+using System;
 using UnityEngine;
-
-[CreateAssetMenu(menuName = "Providers/Game Score Provider")]
-public sealed class GameScoreProvider : ScriptableObject
-{
-    private IGameScore m_GameScore;
-    
-    public IGameScore Get()
-    {
-        if (m_GameScore == null)
-        {
-            var gameScore = new GameScore();
-            gameScore.Load();
-            m_GameScore = gameScore;
-        }
-
-        return m_GameScore;
-    }    
-}
 
 sealed class GameScore : IGameScore
 {

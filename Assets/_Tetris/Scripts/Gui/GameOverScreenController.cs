@@ -4,26 +4,24 @@ using UnityEngine.UI;
 
 public sealed class GameOverScreenController : MonoBehaviour
 {
-    [SerializeField] private GameStateMachineProvider m_GameStateMachineProvider;
-    [SerializeField] private GameScoreProvider m_GameScoreProvider;
+    [SerializeField] private DiContainer m_DiContainer;
     [SerializeField] private GameObject m_GameOverScreen;
     [SerializeField] private TMP_Text m_ScoreText;
     [SerializeField] private TMP_Text m_PersonalBestText;
     [SerializeField] private Button m_PlayAgainButton;
 
-    private IGameScore m_GameScore;
-    private IGameStateMachine m_GameStateMachine;
+    [Injected] public IGameScore GameScore { get; set; }
+    [Injected] public IGameStateMachine GameStateMachine { get; set; }
 
     private void Awake()
     {
-        m_GameStateMachine = m_GameStateMachineProvider.Get();
-        m_GameScore = m_GameScoreProvider.Get();
+        m_DiContainer.Inject(this);
     }
 
     private void Start()
     {
-        m_GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        if (m_GameStateMachine.State == GameState.GameOver)
+        GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
+        if (GameStateMachine.State == GameState.GameOver)
             ShowScreen();
         else
             HideScreen();
@@ -33,13 +31,13 @@ public sealed class GameOverScreenController : MonoBehaviour
 
     private void OnDestroy()
     {
-        m_GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
+        GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
         m_PlayAgainButton.onClick.RemoveListener(PlayAgainButton_OnClicked);
     }
 
     private void PlayAgainButton_OnClicked()
     {
-        m_GameStateMachine.TransitionTo(GameState.Playing);
+        GameStateMachine.TransitionTo(GameState.Playing);
     }
 
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
@@ -52,8 +50,8 @@ public sealed class GameOverScreenController : MonoBehaviour
 
     private void ShowScreen()
     {
-        m_ScoreText.text = m_GameScore.TotalPoints.ToString();
-        m_PersonalBestText.text = m_GameScore.BestPoints.ToString();
+        m_ScoreText.text = GameScore.TotalPoints.ToString();
+        m_PersonalBestText.text = GameScore.BestPoints.ToString();
         m_GameOverScreen.SetActive(true);
     }
 

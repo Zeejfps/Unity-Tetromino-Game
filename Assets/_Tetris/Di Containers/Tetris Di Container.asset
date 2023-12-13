@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431148393b474e7aa6844b0d4c1d478c, type: 3}
-  m_Name: Tetromino Spawner Provider
+  m_Script: {fileID: 11500000, guid: ec92322b95afad041ac2dc0820f8981b, type: 3}
+  m_Name: Tetris Di Container
   m_EditorClassIdentifier: 
-  m_GridFactory: {fileID: 11400000, guid: 470971ab5bfd7184180f9930af7f522d, type: 2}
   m_TetrominoPrefabs:
   - {fileID: 3773182805473686452, guid: 28d428d1e382b074aa0043367acbcfec, type: 3}
   - {fileID: 6191582267790398142, guid: cb2324c712a45da4b8e3d8fe0f52da30, type: 3}

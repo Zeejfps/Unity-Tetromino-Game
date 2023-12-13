@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5fe8bf4b169eb646aac99a0aa8ed8c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_GameStateMachineProvider: {fileID: 11400000, guid: 7be7891ddecea284587149293fadc2e4, type: 2}
+  m_DiContainer: {fileID: 11400000, guid: df084880d09331f48927fcec482e12d0, type: 2}
   m_PauseScreen: {fileID: 6550010704020400525}
   m_ResumeButton: {fileID: 7646655558470199125}
   m_RestartButton: {fileID: 3682911935442086521}
