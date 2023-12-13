@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public sealed class MoveRightInput : PlayingStateGameInput
+public sealed class MoveRightInputAction : PlayingStateGameInputAction
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
     
-    public MoveRightInput(IClock clock, IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) 
+    public MoveRightInputAction(IClock clock, IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) 
         : base(clock, gameStateMachine)
     {
         m_TouchGestureDetector = touchGestureDetector;

@@ -12,11 +12,11 @@ public sealed class GameController : Controller
     [Injected] public IGrid Grid { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
     [Injected] public IGameScore GameScore { get; set; }
-    [Injected] public MoveLeftInput MoveLeft { get; set; }
-    [Injected] public MoveRightInput MoveRight { get; set; }
-    [Injected] public MoveDownInput MoveDown { get; set; }
-    [Injected] public RotateInput Rotate { get; set; }
-    [Injected] public InstantDropInput InstantDrop { get; set; }
+    [Injected] public MoveLeftInputAction MoveLeft { get; set; }
+    [Injected] public MoveRightInputAction MoveRight { get; set; }
+    [Injected] public MoveDownInputAction MoveDown { get; set; }
+    [Injected] public RotateInputAction Rotate { get; set; }
+    [Injected] public InstantDropInputAction InstantDrop { get; set; }
 
     private readonly List<int> m_CompletedRowsCache = new();
     private Tetromino m_Tetromino;
@@ -30,21 +30,21 @@ public sealed class GameController : Controller
     {
         Application.targetFrameRate = 60;
         GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        MoveLeft.Performed += MoveLeftInput_OnPerformed;
-        MoveRight.Performed += MoveRightInput_OnPerformed;
-        MoveDown.Performed += MoveDownInput_OnPerformed;
-        Rotate.Performed += RotateInput_OnPerformed;
-        InstantDrop.Performed += InstantDropInput_OnPerformed;
+        MoveLeft.Triggered += MoveLeftInput_OnPerformed;
+        MoveRight.Triggered += MoveRightInput_OnPerformed;
+        MoveDown.Triggered += MoveDownInput_OnPerformed;
+        Rotate.Triggered += RotateInput_OnPerformed;
+        InstantDrop.Triggered += InstantDropInput_OnPerformed;
     }
 
     private void OnDestroy()
     {
         GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
-        MoveLeft.Performed -= MoveLeftInput_OnPerformed;
-        MoveRight.Performed -= MoveRightInput_OnPerformed;
-        MoveDown.Performed -= MoveDownInput_OnPerformed;
-        Rotate.Performed -= RotateInput_OnPerformed;
-        InstantDrop.Performed -= InstantDropInput_OnPerformed;
+        MoveLeft.Triggered -= MoveLeftInput_OnPerformed;
+        MoveRight.Triggered -= MoveRightInput_OnPerformed;
+        MoveDown.Triggered -= MoveDownInput_OnPerformed;
+        Rotate.Triggered -= RotateInput_OnPerformed;
+        InstantDrop.Triggered -= InstantDropInput_OnPerformed;
     }
     
     private void OnApplicationFocus(bool hasFocus)
@@ -107,31 +107,31 @@ public sealed class GameController : Controller
         }
     }
 
-    private void RotateInput_OnPerformed(IInput input)
+    private void RotateInput_OnPerformed(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryRotate();
     }
 
-    private void MoveLeftInput_OnPerformed(IInput input)
+    private void MoveLeftInput_OnPerformed(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryMoveLeft();
     }
     
-    private void MoveRightInput_OnPerformed(IInput input)
+    private void MoveRightInput_OnPerformed(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryMoveRight();
     }
 
-    private void MoveDownInput_OnPerformed(IInput input)
+    private void MoveDownInput_OnPerformed(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryMoveDown();
     }
 
-    private async void InstantDropInput_OnPerformed(IInput input)
+    private async void InstantDropInput_OnPerformed(IInputAction input)
     {
         if (m_Tetromino != null)
         {

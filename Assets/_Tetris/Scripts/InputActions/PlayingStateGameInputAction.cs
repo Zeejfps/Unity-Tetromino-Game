@@ -1,11 +1,11 @@
-﻿public abstract class PlayingStateGameInput : IInput
+﻿public abstract class PlayingStateGameInputAction : IInputAction
 {
-    public event InputPerformedCallback Performed;
+    public event InputPerformedCallback Triggered;
 
     private readonly IClock m_Clock;
     private readonly IGameStateMachine m_GameStateMachine;
 
-    protected PlayingStateGameInput(IClock clock, IGameStateMachine gameStateMachine)
+    protected PlayingStateGameInputAction(IClock clock, IGameStateMachine gameStateMachine)
     {
         m_Clock = clock;
         m_GameStateMachine = gameStateMachine;
@@ -30,6 +30,6 @@
     
     protected virtual void OnPerformed()
     {
-        Performed?.Invoke(this);
+        Triggered?.Invoke(this);
     }
 }

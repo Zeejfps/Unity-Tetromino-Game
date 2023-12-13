@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public sealed class RotateInput : PlayingStateGameInput
+public sealed class RotateInputAction : PlayingStateGameInputAction
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
 
-    public RotateInput(IClock clock, IGameStateMachine gameStateMachine,
+    public RotateInputAction(IClock clock, IGameStateMachine gameStateMachine,
         ITouchGestureDetector touchGestureDetector)
         : base(clock, gameStateMachine)
     {
