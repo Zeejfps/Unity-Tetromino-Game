@@ -18,16 +18,7 @@ sealed class LegacyInputSystemTouchGestureDetector : ITouchGestureDetector
     public LegacyInputSystemTouchGestureDetector(IClock clock)
     {
         m_Clock = clock;
-    }
-
-    public void Enable()
-    {
         m_Clock.Ticked += Clock_OnTicked;
-    }
-
-    public void Disable()
-    {
-        m_Clock.Ticked -= Clock_OnTicked;
     }
 
     private void Clock_OnTicked(IClock clock)

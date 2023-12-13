@@ -10,6 +10,7 @@ public abstract class DiContainer : ScriptableObject
     
     private void OnEnable()
     {
+        m_TypeToFactoryTable.Clear();
         OnInit();
     }
 
@@ -18,6 +19,20 @@ public abstract class DiContainer : ScriptableObject
     public T Get<T>()
     {
         return (T)Get(typeof(T));
+    }
+    
+    protected void RegisterSingleton<T>()
+    {
+        var type = typeof(T);
+        try
+        {
+            var factory = new SingletonFactory<T>(this);
+            m_TypeToFactoryTable.Add(type, factory);
+        }
+        catch (ArgumentException)
+        {
+            throw new Exception($"Singleton for {type} type already registered");
+        }
     }
     
     protected void RegisterSingleton<TInterface, TConcrete>() where TConcrete : TInterface

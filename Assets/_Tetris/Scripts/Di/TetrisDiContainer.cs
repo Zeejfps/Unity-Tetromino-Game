@@ -8,20 +8,26 @@ public sealed class TetrisDiContainer : DiContainer
     protected override void OnInit()
     {
         var grid = new Grid(10, 20);
+        RegisterSingleton<IGrid>(grid);
+        
         var tetrominoSpawner = new TetrominoSpawner(grid, m_TetrominoPrefabs);
-        var gameStateMachine = new TetrisGameStateMachine();
-        var gameScore = new GameScore();
-        var clock = new UnityClock();
+        RegisterSingleton<ITetrominoSpawner>(tetrominoSpawner);
         
-        var touchGestureDetector = new LegacyInputSystemTouchGestureDetector(clock);
-        touchGestureDetector.Enable();
+        RegisterSingleton<IGameStateMachine, TetrisGameStateMachine>();
+        RegisterSingleton<IGameScore, GameScore>();
+        RegisterSingleton<IClock, UnityClock>();
+        RegisterSingleton<ITouchGestureDetector, LegacyInputSystemTouchGestureDetector>();
+        RegisterSingleton<MoveLeftInput>();
+        RegisterSingleton<MoveRightInput>();
+        RegisterSingleton<MoveDownInput>();
+        RegisterSingleton<RotateInput>();
+        RegisterSingleton<InstantDropInput>();
         
-        var moveLeftInput = new MoveLeftInput(clock, gameStateMachine, touchGestureDetector);
-        var moveRightInput = new MoveRightInput(clock, gameStateMachine, touchGestureDetector);
-        var moveDownInput = new MoveDownInput(clock, gameStateMachine);
-        var rotateInput = new RotateInput(clock, gameStateMachine, touchGestureDetector);
-        var instantDropInput = new InstantDropInput(clock, gameStateMachine, touchGestureDetector);
-        
+        var moveLeftInput = Get<MoveLeftInput>();
+        var moveRightInput = Get<MoveRightInput>();
+        var moveDownInput = Get<MoveDownInput>();
+        var rotateInput = Get<RotateInput>();
+        var instantDropInput = Get<InstantDropInput>();
         var gameInput = new GameInput(
             moveLeftInput,
             moveRightInput,
@@ -29,12 +35,6 @@ public sealed class TetrisDiContainer : DiContainer
             rotateInput,
             instantDropInput
         );
-        
-        RegisterSingleton<IGrid>(grid);
-        RegisterSingleton<ITetrominoSpawner>(tetrominoSpawner);
-        RegisterSingleton<IGameStateMachine>(gameStateMachine);
-        RegisterSingleton<IGameScore>(gameScore);
-        RegisterSingleton<ITouchGestureDetector>(touchGestureDetector);
         RegisterSingleton<IGameInput>(gameInput);
     }
 }
