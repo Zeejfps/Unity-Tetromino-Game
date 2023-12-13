@@ -27,10 +27,8 @@ public sealed class GameController : MonoBehaviour
     private void Awake()
     {
         m_DiContainer.Inject(this);
-        
         Application.targetFrameRate = 60;
-
-        m_CompletedRowsCache = new();
+        m_CompletedRowsCache = new List<int>();
     }
 
     private void Start()
