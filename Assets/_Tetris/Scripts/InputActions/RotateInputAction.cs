@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public sealed class RotateInputAction : PlayingStateGameInputAction
+public sealed class RotateInputAction : BaseInputAction
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
 
-    public RotateInputAction(IClock clock, IGameStateMachine gameStateMachine,
+    public RotateInputAction(IClock clock,
         ITouchGestureDetector touchGestureDetector)
-        : base(clock, gameStateMachine)
+        : base(clock)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }
@@ -18,7 +18,7 @@ public sealed class RotateInputAction : PlayingStateGameInputAction
             Input.GetKeyDown(KeyCode.W) ||
             m_TouchGestureDetector.TouchDetected())
         {
-            OnPerformed();
+            OnTriggered();
         }
     }
 }

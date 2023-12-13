@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 
-public sealed class InstantDropInputAction : PlayingStateGameInputAction
+public sealed class InstantDropInputAction : BaseInputAction
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
     
-    public InstantDropInputAction(IClock clock, IGameStateMachine gameStateMachine, 
-        ITouchGestureDetector touchGestureDetector) : base(clock, gameStateMachine)
+    public InstantDropInputAction(IClock clock, ITouchGestureDetector touchGestureDetector) : base(clock)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }
@@ -15,7 +14,7 @@ public sealed class InstantDropInputAction : PlayingStateGameInputAction
         if (Input.GetKeyDown(KeyCode.Space) ||
             m_TouchGestureDetector.SwipeDownDetected())
         {
-            OnPerformed();
+            OnTriggered();
         }
     }
 }

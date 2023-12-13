@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public sealed class MoveRightInputAction : PlayingStateGameInputAction
+public sealed class MoveRightInputAction : BaseInputAction
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
     
-    public MoveRightInputAction(IClock clock, IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) 
-        : base(clock, gameStateMachine)
+    public MoveRightInputAction(IClock clock,
+        ITouchGestureDetector touchGestureDetector) : base(clock)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }
@@ -16,7 +16,7 @@ public sealed class MoveRightInputAction : PlayingStateGameInputAction
             Input.GetKeyDown(KeyCode.RightArrow) ||
             m_TouchGestureDetector.SwipeRightDetected())
         {
-            OnPerformed();
+            OnTriggered();
         }
     }
 }

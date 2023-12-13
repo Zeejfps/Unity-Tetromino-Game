@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public sealed class MoveDownInputAction : PlayingStateGameInputAction
+public sealed class MoveDownInputAction : BaseInputAction
 {
-    public MoveDownInputAction(IClock clock, IGameStateMachine gameStateMachine) : base(clock, gameStateMachine)
+    public MoveDownInputAction(IClock clock) : base(clock)
     {
     }
     
@@ -11,7 +11,7 @@ public sealed class MoveDownInputAction : PlayingStateGameInputAction
         if (Input.GetKeyDown(KeyCode.S) ||
             Input.GetKeyDown(KeyCode.DownArrow))
         {
-            OnPerformed();
+            OnTriggered();
         }
     }
 }

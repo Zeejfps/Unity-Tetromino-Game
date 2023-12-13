@@ -17,6 +17,7 @@ public sealed class GameController : Controller
     [Injected] public MoveDownInputAction MoveDown { get; set; }
     [Injected] public RotateInputAction Rotate { get; set; }
     [Injected] public InstantDropInputAction InstantDrop { get; set; }
+    [Injected] public MainInputActions MainInputActions { get; set; }
 
     private readonly List<int> m_CompletedRowsCache = new();
     private Tetromino m_Tetromino;
@@ -61,6 +62,7 @@ public sealed class GameController : Controller
     
     private void OnGameStarted()
     {
+        MainInputActions.Enable();
         ResetTotalLinesCleared();
         UpdateLevel();
         UpdateDelay();
@@ -70,11 +72,13 @@ public sealed class GameController : Controller
 
     private void OnGamePaused()
     {
+        MainInputActions.Disable();
         StopUpdateGameRoutine();
     }
 
     private void OnGameResumed()
     {
+        MainInputActions.Enable();
         if (m_Tetromino == null) 
             SpawnTetromino();
 
@@ -83,6 +87,7 @@ public sealed class GameController : Controller
 
     private void OnGameEnded()
     {
+        MainInputActions.Disable();
         StopUpdateGameRoutine();
     }
 

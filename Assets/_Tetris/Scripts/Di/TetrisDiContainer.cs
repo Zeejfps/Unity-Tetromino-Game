@@ -11,6 +11,7 @@ public sealed class TetrisDiContainer : DiContainer, IGridConfig, ITetrominoPref
     
     protected override void OnInit()
     {
+        RegisterSingleton<MainInputActions>();
         RegisterSingleton<IGridConfig>(this);
         RegisterSingleton<ITetrominoPrefabsProvider>(this);
         RegisterSingleton<IGrid, Grid>();
