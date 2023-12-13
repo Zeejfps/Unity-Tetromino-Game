@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 
 [DefaultExecutionOrder(-10)]
-sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestureDetector
+sealed class LegacyInputSystemTouchGestureDetector : ITouchGestureDetector
 {
     private Vector2 m_PrevTouchPosition;
     private Vector2 m_TouchTotalMoveDelta;
@@ -12,7 +12,29 @@ sealed class LegacyInputSystemTouchGestureDetector : MonoBehaviour, ITouchGestur
     private bool m_SwipeRightDetected;
     private bool m_SwipeDownDetected;
     private bool m_IsTrackingTouch;
+
+    private readonly IClock m_Clock;
     
+    public LegacyInputSystemTouchGestureDetector(IClock clock)
+    {
+        m_Clock = clock;
+    }
+
+    public void Enable()
+    {
+        m_Clock.Ticked += Clock_OnTicked;
+    }
+
+    public void Disable()
+    {
+        m_Clock.Ticked -= Clock_OnTicked;
+    }
+
+    private void Clock_OnTicked(IClock clock)
+    {
+        Update();
+    }
+
     public bool SwipeLeftDetected()
     {
         return m_SwipeLeftDetected;

@@ -2,7 +2,7 @@
 
 sealed class MoveDownInput : PlayingStateGameInput
 {
-    public MoveDownInput(IGameStateMachine gameStateMachine) : base(gameStateMachine)
+    public MoveDownInput(IClock clock, IGameStateMachine gameStateMachine) : base(clock, gameStateMachine)
     {
     }
     

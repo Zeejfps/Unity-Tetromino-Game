@@ -4,7 +4,8 @@ sealed class InstantDropInput : PlayingStateGameInput
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
     
-    public InstantDropInput(IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) : base(gameStateMachine)
+    public InstantDropInput(IClock clock, IGameStateMachine gameStateMachine, 
+        ITouchGestureDetector touchGestureDetector) : base(clock, gameStateMachine)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }

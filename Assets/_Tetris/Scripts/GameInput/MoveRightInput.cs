@@ -4,7 +4,8 @@ sealed class MoveRightInput : PlayingStateGameInput
 {
     private readonly ITouchGestureDetector m_TouchGestureDetector;
     
-    public MoveRightInput(IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) : base(gameStateMachine)
+    public MoveRightInput(IClock clock, IGameStateMachine gameStateMachine, ITouchGestureDetector touchGestureDetector) 
+        : base(clock, gameStateMachine)
     {
         m_TouchGestureDetector = touchGestureDetector;
     }

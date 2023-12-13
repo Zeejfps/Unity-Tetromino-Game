@@ -5,7 +5,6 @@ using UnityEngine;
 public sealed class GameController : MonoBehaviour
 {
     [SerializeField] private DiContainer m_DiContainer;
-    [SerializeField] private GameInputProvider m_GameInputProvider;
     
     [Header("Settings")]
     [Range(1, 10)]
@@ -15,11 +14,10 @@ public sealed class GameController : MonoBehaviour
     [Injected] public IGrid Grid { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
     [Injected] public IGameScore GameScore { get; set; }
+    [Injected] public IGameInput GameInput { get; set; }
 
     private List<int> m_CompletedRowsCache;
     private Tetromino m_Tetromino;
-    private IGameInput m_GameInput;
-
     private int m_Level;
     private int m_Iterations;
     private int m_TotalLinesCleared;
@@ -33,27 +31,26 @@ public sealed class GameController : MonoBehaviour
         Application.targetFrameRate = 60;
 
         m_CompletedRowsCache = new();
-        m_GameInput = m_GameInputProvider.Get();
     }
 
     private void Start()
     {
         GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        m_GameInput.MoveLeft.Performed += MoveLeftInput_OnPerformed;
-        m_GameInput.MoveRight.Performed += MoveRightInput_OnPerformed;
-        m_GameInput.MoveDown.Performed += MoveDownInput_OnPerformed;
-        m_GameInput.Rotate.Performed += RotateInput_OnPerformed;
-        m_GameInput.InstantDrop.Performed += InstantDropInput_OnPerformed;
+        GameInput.MoveLeft.Performed += MoveLeftInput_OnPerformed;
+        GameInput.MoveRight.Performed += MoveRightInput_OnPerformed;
+        GameInput.MoveDown.Performed += MoveDownInput_OnPerformed;
+        GameInput.Rotate.Performed += RotateInput_OnPerformed;
+        GameInput.InstantDrop.Performed += InstantDropInput_OnPerformed;
     }
 
     private void OnDestroy()
     {
         GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
-        m_GameInput.MoveLeft.Performed -= MoveLeftInput_OnPerformed;
-        m_GameInput.MoveRight.Performed -= MoveRightInput_OnPerformed;
-        m_GameInput.MoveDown.Performed -= MoveDownInput_OnPerformed;
-        m_GameInput.Rotate.Performed -= RotateInput_OnPerformed;
-        m_GameInput.InstantDrop.Performed -= InstantDropInput_OnPerformed;
+        GameInput.MoveLeft.Performed -= MoveLeftInput_OnPerformed;
+        GameInput.MoveRight.Performed -= MoveRightInput_OnPerformed;
+        GameInput.MoveDown.Performed -= MoveDownInput_OnPerformed;
+        GameInput.Rotate.Performed -= RotateInput_OnPerformed;
+        GameInput.InstantDrop.Performed -= InstantDropInput_OnPerformed;
     }
     
     private void OnApplicationFocus(bool hasFocus)
