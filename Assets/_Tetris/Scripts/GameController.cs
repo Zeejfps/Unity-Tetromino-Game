@@ -192,6 +192,11 @@ public sealed class GameController : Controller
     
     private IEnumerator RestartGameRoutine()
     {
+        if (m_Tetromino != null)
+        {
+            m_Tetromino.DecomposeAndDestroy();
+            m_Tetromino = null;
+        }
         GameScore.ResetPoints();
         yield return DestroyAllCells();
         OnGameStarted();
