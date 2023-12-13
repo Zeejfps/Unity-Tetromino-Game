@@ -8,11 +8,11 @@ public sealed class GameController : Controller
     [Range(1, 10)]
     [SerializeField] private int m_InitialLevel = 1;
 
-    [Injected] public ITetrominoSpawner TetrominoSpawner { get; set; }
     [Injected] public IGrid Grid { get; set; }
-    [Injected] public IGameStateMachine GameStateMachine { get; set; }
     [Injected] public IGameScore GameScore { get; set; }
     [Injected] public MainInputActions MainInputActions { get; set; }
+    [Injected] public ITetrominoSpawner TetrominoSpawner { get; set; }
+    [Injected] public IGameStateMachine GameStateMachine { get; set; }
 
     private readonly List<int> m_CompletedRowsCache = new();
     private Tetromino m_Tetromino;
