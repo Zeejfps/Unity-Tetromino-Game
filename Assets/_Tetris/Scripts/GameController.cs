@@ -62,12 +62,12 @@ public sealed class GameController : Controller
     
     private void OnGameStarted()
     {
-        MainInputActions.Enable();
         ResetTotalLinesCleared();
         UpdateLevel();
         UpdateDelay();
         SpawnTetromino();
         StartUpdateGameRoutine();
+        MainInputActions.Enable();
     }
 
     private void OnGamePaused()
