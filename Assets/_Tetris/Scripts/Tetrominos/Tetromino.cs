@@ -24,8 +24,24 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
         }
     }
 
+    private bool m_ShowPreview = true;
+    public bool ShowPreview
+    {
+        get => m_ShowPreview;
+        set
+        {
+            if (m_ShowPreview == value)
+                return;
+
+            m_ShowPreview = value;
+            if (m_Initialized)
+                UpdatePreview();
+        }
+    }
+
     [Injected] public IGrid Grid { get; set; }
-    
+
+    private bool m_Initialized;
     private Vector3[] m_Offsets;
     private Cell[] m_Cells;
 
@@ -41,6 +57,7 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
 
     private void Start()
     {
+        m_Initialized = true;
         if (!IsPreview)
         {
             FillGridAtMyPosition();
@@ -217,8 +234,15 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
 
     private void UpdatePreview()
     {
-        var previewPosition = ComputePreviewPosition();
-        DisplayPreview(previewPosition);
+        if (m_ShowPreview)
+        {
+            var previewPosition = ComputePreviewPosition();
+            DisplayPreview(previewPosition);
+        }
+        else
+        {
+            ClearPreview();
+        }
     }
 
     private Vector3 ComputePreviewPosition()
@@ -255,6 +279,17 @@ public sealed class Tetromino : MonoBehaviour, IAnimate
             m_Preview.transform.position = previewPosition;
             m_Preview.m_Pivot.rotation = m_Pivot.rotation;
         }
+    }
+
+    private void ClearPreview()
+    {
+        if (m_Preview == null)
+            return;
+
+        var go = m_Preview.gameObject;
+        go.SetActive(false);
+        Destroy(go);
+        m_Preview = null;
     }
 
     public void DecomposeAndDestroy()
