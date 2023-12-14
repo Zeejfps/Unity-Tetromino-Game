@@ -27,6 +27,8 @@ public sealed class TetrisDiContainer : DiContainer, IGridConfig, ITetrominoPref
         RegisterSingleton<MoveDownInputAction>();
         RegisterSingleton<RotateInputAction>();
         RegisterSingleton<InstantDropInputAction>();
+        
+        // Input Action Groups
         RegisterSingleton<MainInputActions>();
     }
 }
