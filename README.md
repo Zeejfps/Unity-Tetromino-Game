@@ -12,9 +12,13 @@ https://evasilyev.com/games/tetris
 This turns out to be a great resource for internal workings of Tetris.
 https://www.colinfahey.com/tetris/tetris.html
 
-## Files
-Need better name for this section
+## Architecture
+The entry point to the application can be found in [TetrisDiContainer.cs](https://github.com/Zeejfps/Unity-Tetromino-Game/blob/main/Assets/_Tetris/Scripts/Di/TetrisDiContainer.cs).
+This file is where all the 
+dependencies are registered.
+
+The actual bulk of the work is done inside the [GameController.cs](https://github.com/Zeejfps/Unity-Tetromino-Game/blob/main/Assets/_Tetris/Scripts/GameController.cs)
 ### Controllers
-Classes that listen and handle events
-### Providers
-Are scriptable objects that work kinda like a dependency container but on a much more granular level 
+In this project a Controller is a Monobehaviour. 
+The main purpose of a controller is to receive events such as: input, game, application, or any other kind of events, 
+and response to those events.
