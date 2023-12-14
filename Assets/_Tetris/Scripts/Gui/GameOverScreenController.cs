@@ -39,7 +39,11 @@ public sealed class GameOverScreenController : Controller
 
     private void QuitButton_OnClicked()
     {
+        #if UNITY_EDITOR 
+        UnityEditor.EditorApplication.ExitPlaymode();
+        #else
         Application.Quit();
+        #endif
     }
     
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
