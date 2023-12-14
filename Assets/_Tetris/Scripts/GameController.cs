@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,7 +96,7 @@ public sealed class GameController : Controller
         StartCoroutine(RestartGameRoutine());
     }
     
-    private IEnumerator OnTetrominoLanded()
+    private IEnumerator OnTetrominoLanded(Action onComplete = default)
     {
         AwardPointsForLanding();
         m_Iterations = 0;
@@ -108,6 +109,10 @@ public sealed class GameController : Controller
             m_Tetromino.Destroy();
             m_Tetromino = null;
             GameStateMachine.TransitionTo(GameState.GameOver);
+        }
+        else
+        {
+            onComplete?.Invoke();
         }
     }
     
@@ -149,7 +154,7 @@ public sealed class GameController : Controller
         {
             StopUpdateGameRoutine();
             await m_Tetromino.DropInstantly();
-            StartUpdateGameRoutine();
+            StartCoroutine(OnTetrominoLanded(StartUpdateGameRoutine));
         }
     }
 
