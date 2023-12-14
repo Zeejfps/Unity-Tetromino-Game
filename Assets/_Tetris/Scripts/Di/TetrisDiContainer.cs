@@ -1,16 +1,23 @@
 using UnityEngine;
 
 [CreateAssetMenu]
-public sealed class TetrisDiContainer : DiContainer, IGridConfig, ITetrominoPrefabsProvider
+public sealed class TetrisDiContainer : DiContainer, 
+    IGridConfig,
+    ITetrominoPrefabsProvider,
+    IMusicClipProvider
 {
+    [SerializeField] private AudioClip m_MusicClip;
     [SerializeField] private Tetromino[] m_TetrominoPrefabs;
-    
+
+    public AudioClip MusicClip => m_MusicClip;
     public int GridWidth => 10;
     public int GridHeight => 20;
     public Tetromino[] TetrominoPrefabs => m_TetrominoPrefabs;
     
     protected override void OnInit()
     {
+        RegisterSingleton<IMusicClipProvider>(this);
+        RegisterSingleton<IMusicPlayer, UnityAudioSourceMusicPlayer>();
         RegisterSingleton<IGridConfig>(this);
         RegisterSingleton<ITetrominoPrefabsProvider>(this);
         RegisterSingleton<IGrid, Grid>();
