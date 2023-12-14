@@ -154,7 +154,11 @@ public sealed class GameController : Controller
         {
             StopUpdateGameRoutine();
             await m_Tetromino.DropInstantly();
-            StartCoroutine(OnTetrominoLanded(StartUpdateGameRoutine));
+            StartCoroutine(OnTetrominoLanded(() =>
+            {
+                if (GameStateMachine.State == GameState.Playing)
+                    StartUpdateGameRoutine();
+            }));
         }
     }
 

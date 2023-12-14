@@ -8,6 +8,7 @@ public sealed class GameOverScreenController : Controller
     [SerializeField] private TMP_Text m_ScoreText;
     [SerializeField] private TMP_Text m_PersonalBestText;
     [SerializeField] private Button m_PlayAgainButton;
+    [SerializeField] private Button m_QuitButton;
 
     [Injected] public IGameScore GameScore { get; set; }
     [Injected] public IGameStateMachine GameStateMachine { get; set; }
@@ -21,12 +22,14 @@ public sealed class GameOverScreenController : Controller
             HideScreen();
         
         m_PlayAgainButton.onClick.AddListener(PlayAgainButton_OnClicked);
+        m_QuitButton.onClick.AddListener(QuitButton_OnClicked);
     }
 
     private void OnDestroy()
     {
         GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
         m_PlayAgainButton.onClick.RemoveListener(PlayAgainButton_OnClicked);
+        m_QuitButton.onClick.RemoveListener(QuitButton_OnClicked);
     }
 
     private void PlayAgainButton_OnClicked()
@@ -34,6 +37,11 @@ public sealed class GameOverScreenController : Controller
         GameStateMachine.TransitionTo(GameState.Playing);
     }
 
+    private void QuitButton_OnClicked()
+    {
+        Application.Quit();
+    }
+    
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
     {
         if (currstate == GameState.GameOver)

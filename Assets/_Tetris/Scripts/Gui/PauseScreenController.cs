@@ -28,14 +28,13 @@ public sealed class PauseScreenController : Controller
     private void RestartButton_OnClicked()
     {
         GameStateMachine.TransitionTo(GameState.GameOver);
-        GameStateMachine.TransitionTo(GameState.Playing);
     }
 
     private void ResumeButton_OnClicked()
     {
         GameStateMachine.TransitionTo(GameState.Playing);
     }
-
+    
     private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
     {
         if (currstate == GameState.Paused)
