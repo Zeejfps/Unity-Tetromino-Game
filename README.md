@@ -22,3 +22,8 @@ The actual bulk of the work is done inside the [GameController.cs](https://githu
 In this project a Controller is a Monobehaviour. 
 The main purpose of a controller is to receive events such as: input, game, application, or any other kind of events, 
 and response to those events.
+
+# Credits
+* Dev - Evgeny "Zee" Vasilyev
+* Music - *Korobeiniki* Downloaded from [khinsider.com](https://downloads.khinsider.com/game-soundtracks/album/tetris-gb)
+* Font - *Crang*, Downloaded from [dafonts.com](https://www.dafont.com/crang.font)
