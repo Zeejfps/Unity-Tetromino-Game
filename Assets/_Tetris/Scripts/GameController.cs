@@ -26,25 +26,25 @@ public sealed class GameController : Controller
     private void Start()
     {
         Application.targetFrameRate = 60;
-        GameStateMachine.StateChanged += GameStateMachine_OnStateChanged;
-        MainInputActions.MoveLeftInputAction.Triggered += MoveLeftInput_OnPerformed;
-        MainInputActions.MoveRightInputAction.Triggered += MoveRightInput_OnPerformed;
-        MainInputActions.MoveDownInputAction.Triggered += MoveDownInput_OnPerformed;
-        MainInputActions.RotateInputAction.Triggered += RotateInput_OnPerformed;
-        MainInputActions.InstantDropInputAction.Triggered += InstantDropInput_OnPerformed;
-        PauseResumeInputAction.Triggered += PauseResumeInputAction_OnTriggered;
+        GameStateMachine.StateChanged += OnGameStateMachineStateChanged;
+        MainInputActions.MoveLeftInputAction.Triggered += OnMoveLeftInputActionTriggered;
+        MainInputActions.MoveRightInputAction.Triggered += OnMoveRightInputActionTriggered;
+        MainInputActions.MoveDownInputAction.Triggered += OnMoveDownInputActionTriggered;
+        MainInputActions.RotateInputAction.Triggered += OnRotateInputActionTriggered;
+        MainInputActions.InstantDropInputAction.Triggered += OnInstantDropInputActionTriggered;
+        PauseResumeInputAction.Triggered += OnPauseResumeInputActionTriggered;
         PauseResumeInputAction.Enable();
     }
 
     private void OnDestroy()
     {
-        GameStateMachine.StateChanged -= GameStateMachine_OnStateChanged;
-        MainInputActions.MoveLeftInputAction.Triggered -= MoveLeftInput_OnPerformed;
-        MainInputActions.MoveRightInputAction.Triggered -= MoveRightInput_OnPerformed;
-        MainInputActions.MoveDownInputAction.Triggered -= MoveDownInput_OnPerformed;
-        MainInputActions.RotateInputAction.Triggered -= RotateInput_OnPerformed;
-        MainInputActions.InstantDropInputAction.Triggered -= InstantDropInput_OnPerformed;
-        PauseResumeInputAction.Triggered -= PauseResumeInputAction_OnTriggered;
+        GameStateMachine.StateChanged -= OnGameStateMachineStateChanged;
+        MainInputActions.MoveLeftInputAction.Triggered -= OnMoveLeftInputActionTriggered;
+        MainInputActions.MoveRightInputAction.Triggered -= OnMoveRightInputActionTriggered;
+        MainInputActions.MoveDownInputAction.Triggered -= OnMoveDownInputActionTriggered;
+        MainInputActions.RotateInputAction.Triggered -= OnRotateInputActionTriggered;
+        MainInputActions.InstantDropInputAction.Triggered -= OnInstantDropInputActionTriggered;
+        PauseResumeInputAction.Triggered -= OnPauseResumeInputActionTriggered;
     }
 
     private void OnApplicationFocus(bool hasFocus)
@@ -111,7 +111,7 @@ public sealed class GameController : Controller
         }
     }
     
-    private void PauseResumeInputAction_OnTriggered(IInputAction inputAction)
+    private void OnPauseResumeInputActionTriggered(IInputAction inputAction)
     {
         if (GameStateMachine.State == GameState.Playing)
             GameStateMachine.TransitionTo(GameState.Paused);
@@ -119,41 +119,41 @@ public sealed class GameController : Controller
             GameStateMachine.TransitionTo(GameState.Playing);
     }
 
-    private void RotateInput_OnPerformed(IInputAction input)
+    private void OnRotateInputActionTriggered(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryRotate();
     }
 
-    private void MoveLeftInput_OnPerformed(IInputAction input)
+    private void OnMoveLeftInputActionTriggered(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryMoveLeft();
     }
     
-    private void MoveRightInput_OnPerformed(IInputAction input)
+    private void OnMoveRightInputActionTriggered(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryMoveRight();
     }
 
-    private void MoveDownInput_OnPerformed(IInputAction input)
+    private void OnMoveDownInputActionTriggered(IInputAction input)
     {
         if (m_Tetromino != null)
             m_Tetromino.TryMoveDown();
     }
 
-    private async void InstantDropInput_OnPerformed(IInputAction input)
+    private async void OnInstantDropInputActionTriggered(IInputAction input)
     {
         if (m_Tetromino != null)
         {
-            StopCoroutine(m_UpdateGameRoutine);
+            StopUpdateGameRoutine();
             await m_Tetromino.DropInstantly();
-            m_UpdateGameRoutine = StartCoroutine(UpdateGameRoutine());
+            StartUpdateGameRoutine();
         }
     }
 
-    private void GameStateMachine_OnStateChanged(GameState prevstate, GameState currstate)
+    private void OnGameStateMachineStateChanged(GameState prevstate, GameState currstate)
     {
         if (prevstate == GameState.GameOver && currstate == GameState.Playing)
         {
