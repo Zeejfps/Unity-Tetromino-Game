@@ -21,7 +21,7 @@ public sealed class MusicToggleController : Controller
     private void MusicToggle_OnValueChanged(bool isOn)
     {
         if (isOn)
-            MusicPlayer.PlayOrResume();
+            MusicPlayer.Play();
         else
             MusicPlayer.Pause();
     }
