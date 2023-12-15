@@ -22,6 +22,11 @@ sealed class GameScore : IGameScore
 
     public int BestPoints { get; private set; }
 
+    public GameScore()
+    {
+        Load();
+    }
+
     public void IncreasePoints(int points)
     {
         TotalPoints += points;
