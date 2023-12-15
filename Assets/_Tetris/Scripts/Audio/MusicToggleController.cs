@@ -9,6 +9,7 @@ public sealed class MusicToggleController : Controller
 
     private void Start()
     {
+        m_Toggle.isOn = MusicPlayer.IsPlaying;
         m_Toggle.onValueChanged.AddListener(MusicToggle_OnValueChanged);
     }
 
@@ -22,6 +23,6 @@ public sealed class MusicToggleController : Controller
         if (isOn)
             MusicPlayer.PlayOrResume();
         else
-            MusicPlayer.Stop();
+            MusicPlayer.Pause();
     }
 }
