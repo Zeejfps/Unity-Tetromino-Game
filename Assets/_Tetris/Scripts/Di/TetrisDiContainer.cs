@@ -17,9 +17,9 @@ public sealed class TetrisDiContainer : DiContainer,
     protected override void OnInit()
     {
         RegisterSingleton<IMusicClipProvider>(this);
-        RegisterSingleton<IMusicPlayer, UnityAudioSourceMusicPlayer>();
         RegisterSingleton<IGridConfig>(this);
         RegisterSingleton<ITetrominoPrefabsProvider>(this);
+        RegisterSingleton<IMusicPlayer, UnityAudioSourceMusicPlayer>();
         RegisterSingleton<IGrid, Grid>();
         RegisterSingleton<ITetrominoSpawner, TetrominoSpawner>();
         RegisterSingleton<IGameStateMachine, TetrisGameStateMachine>();
