@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public sealed class UnityAudioSourceMusicPlayer : IMusicPlayer
 {
+    public event Action IsPlayingStateChanged;
     public bool IsPlaying => m_AudioSource.isPlaying;
 
     public float Volume
@@ -26,15 +29,29 @@ public sealed class UnityAudioSourceMusicPlayer : IMusicPlayer
     {
         m_AudioSource.Stop();
         m_AudioSource.Play();
+        OnIsPlayingStateChanged();
     }
 
     public void Play()
     {
+        if (m_AudioSource.isPlaying)
+            return;
+        
         m_AudioSource.Play();
+        OnIsPlayingStateChanged();
     }
 
     public void Pause()
     {
+        if (!m_AudioSource.isPlaying)
+            return;
+        
         m_AudioSource.Pause();
+        OnIsPlayingStateChanged();
+    }
+
+    private void OnIsPlayingStateChanged()
+    {
+        IsPlayingStateChanged?.Invoke();
     }
 }
