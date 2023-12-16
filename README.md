@@ -25,5 +25,5 @@ and response to those events.
 
 ## Credits
 * Dev - Evgeny "Zee" Vasilyev
-* Music - *Korobeiniki*, Downloaded from [khinsider.com](https://downloads.khinsider.com/game-soundtracks/album/tetris-gb)
-* Font - *Crang*, Downloaded from [dafonts.com](https://www.dafont.com/crang.font)
+* Music - *Korobeiniki*, downloaded from [khinsider.com](https://downloads.khinsider.com/game-soundtracks/album/tetris-gb)
+* Font - *Crang*, downloaded from [dafonts.com](https://www.dafont.com/crang.font)
