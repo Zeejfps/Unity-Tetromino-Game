@@ -1,10 +1,17 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class MusicToggleController : Controller
 {
     [SerializeField] private ToggleSwitchWidgetView m_Toggle;
     
     [Injected] public IMusicPlayer MusicPlayer { get; set; }
+
+    private void Start()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+    }
 
     private void OnEnable()
     {
