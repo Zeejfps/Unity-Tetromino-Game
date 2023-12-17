@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8396701500134205211}
   m_Layer: 5
-  m_Name: Score Line
+  m_Name: Labeled Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
