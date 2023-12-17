@@ -17,7 +17,7 @@ The entry point to the application can be found in [TetrisDiContainer.cs](https:
 This file is where all the 
 dependencies are registered.
 
-The actual bulk of the work is done inside the [GameController.cs](https://github.com/Zeejfps/Unity-Tetromino-Game/blob/main/Assets/_Tetris/Scripts/GameController.cs)
+The actual bulk of the work is done inside the [GameSceneController.cs](https://github.com/Zeejfps/Unity-Tetromino-Game/blob/main/Assets/_Tetris/Scripts/GameController.cs)
 ### Controllers
 In this project a Controller is a Monobehaviour. 
 The main purpose of a controller is to receive events such as: input, game, application, or any other kind of events, 

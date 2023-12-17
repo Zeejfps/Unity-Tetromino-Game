@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class GameController : Controller
+public sealed class GameSceneController : Controller
 {
     [Header("Settings")]
     [Range(1, 10)]
