@@ -5,6 +5,8 @@ using UnityEngine;
 
 public sealed class GameSceneController : Controller
 {
+    [SerializeField] private LevelUpBannerView m_LevelUpBannerView;
+    
     [Header("Settings")]
     [Range(1, 10)]
     [SerializeField] private int m_InitialLevel = 1;
@@ -293,6 +295,7 @@ public sealed class GameSceneController : Controller
 
     private void UpdateLevel()
     {
+        var prevLevel = m_Level;
         var linesCleared = m_TotalLinesCleared;
         if (linesCleared <= 0)
         {
@@ -306,6 +309,17 @@ public sealed class GameSceneController : Controller
         {
             m_Level = 10;
         }
+
+        if (m_Level > prevLevel)
+        {
+            OnLeveledUp();
+        }
+    }
+
+    private void OnLeveledUp()
+    {
+        Debug.Log("On Leveled Up");
+        //m_LevelUpBannerView.FlashAnimated();
     }
 
     private void UpdateDelay()
