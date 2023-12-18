@@ -335,6 +335,9 @@ public sealed class GameSceneController : Controller
             yield break;
         
         MainInputActions.Disable();
+        
+        // TODO: This has a huge potential for bugs; 
+        // If this is interrupted for any reason 
         for (var x = 0; x < Grid.Width; x++)
         {
             foreach (var y in m_CompletedRowsCache)
