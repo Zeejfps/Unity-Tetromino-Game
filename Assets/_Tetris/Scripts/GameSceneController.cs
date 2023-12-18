@@ -317,6 +317,9 @@ public sealed class GameSceneController : Controller
 
     private IEnumerator ClearCompletedRows()
     {
+        if (m_CompletedRowsCache.Count == 0)
+            yield break;
+        
         for (var x = 0; x < Grid.Width; x++)
         {
             foreach (var y in m_CompletedRowsCache)
