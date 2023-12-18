@@ -28,6 +28,7 @@ public sealed class GameSceneController : Controller
 
     private void Start()
     {
+        m_Level = m_InitialLevel;
         Application.targetFrameRate = 60;
         GameStateMachine.StateChanged += OnGameStateMachineStateChanged;
         MainInputActions.MoveLeftInputAction.Triggered += OnMoveLeftInputActionTriggered;
@@ -312,6 +313,7 @@ public sealed class GameSceneController : Controller
 
         if (m_Level > prevLevel)
         {
+            Debug.Log($"Prev LeveL: {prevLevel}");
             OnLeveledUp();
         }
     }
@@ -334,6 +336,7 @@ public sealed class GameSceneController : Controller
         if (m_CompletedRowsCache.Count == 0)
             yield break;
         
+        MainInputActions.Disable();
         for (var x = 0; x < Grid.Width; x++)
         {
             foreach (var y in m_CompletedRowsCache)
@@ -363,6 +366,7 @@ public sealed class GameSceneController : Controller
         }
 
         yield return new WaitForSeconds(0.25f);
+        MainInputActions.Enable();
     }
 
     private void FindCompletedRows()
