@@ -313,15 +313,13 @@ public sealed class GameSceneController : Controller
 
         if (m_Level > prevLevel)
         {
-            Debug.Log($"Prev LeveL: {prevLevel}");
             OnLeveledUp();
         }
     }
 
     private void OnLeveledUp()
     {
-        Debug.Log("On Leveled Up");
-        //m_LevelUpBannerView.FlashAnimated();
+        m_LevelUpBannerView.FlashAnimated();
     }
 
     private void UpdateDelay()
