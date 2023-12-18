@@ -12,12 +12,13 @@ public interface IAnimate
 
 public static class AnimationExt
 {
-    public static void Animate(this IAnimate animationSrc, float duration, 
+    public static Coroutine Animate(this IAnimate animationSrc, float duration, 
         Func<float, float> tweenFunc, Action<float> lerpFunc, Action onComplete = default)
     {
         if (animationSrc.AnimationRoutine != null)
             animationSrc.StopCoroutine(animationSrc.AnimationRoutine);
         animationSrc.AnimationRoutine = animationSrc.StartCoroutine(AnimateRoutine(duration, tweenFunc, lerpFunc, onComplete));
+        return animationSrc.AnimationRoutine;
     }
 
     private static IEnumerator AnimateRoutine(float duration, Func<float, float> tweenFunc,
